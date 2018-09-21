@@ -1,4 +1,5 @@
 .PHONY: qemu test
+.DEFAULT_GOAL = qemu
 
 out:
 	mkdir $@
