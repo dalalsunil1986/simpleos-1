@@ -7,5 +7,5 @@ Dependencies
 ### macOS
 
 ```
-brew install qemu nasm
+brew install qemu nasm shellcheck
 ```
