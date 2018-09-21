@@ -19,3 +19,4 @@ References
 - https://en.wikipedia.org/wiki/BIOS
 - https://wiki.osdev.org/Boot_Sequence
 - https://en.wikipedia.org/wiki/Booting#BOOT-LOADER
+- http://www.cs.virginia.edu/~evans/cs216/guides/x86.html

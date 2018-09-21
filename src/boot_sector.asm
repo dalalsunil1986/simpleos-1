@@ -27,12 +27,36 @@
 ; table and other information, so the MBR boot sector program must be 
 ; small enough to fit within 446 bytes of memory or less. 
 
-; Infinite loop (e9 fd ff)
+; This boot loader is written in Intel x86 Assembly
+; See http://www.cs.virginia.edu/~evans/cs216/guides/x86.html
+
+; ---------------------------------------------------------------------
+; Boot loader program
+; ---------------------------------------------------------------------
+
+; Infinite loop
 loop:
     jmp loop 
 
-; Fill with 510 zeros minus the size of the previous code
+; ---------------------------------------------------------------------
+; Fill the remaining code, until offset 510, with zeroes
+; ---------------------------------------------------------------------
+
+; "times" is a generic instruction provided by NASM that causes an 
+; instruction to be assembled multiple times. See 
+; https://www.nasm.us/doc/nasmdoc3.html
+; The syntax is "times TO-FROM", and "$-$$" is a special symbol 
+; denoting the beginning of the current section. So this expression 
+; writes zeroes 510 times from the current section offset.
+
+; The "db" directive declares 1 byte of data. So "db 0" is one byte of 
+; zeroes. Similarly, "dw 0" is two bytes of zeroes, and "dd" is four 
+; bytes of zeroes.
 times 510-($-$$) db 0
 
+; ---------------------------------------------------------------------
 ; Magic number
+; ---------------------------------------------------------------------
+
+; The "dw" instruction writes 2 bytes of data 
 dw 0xaa55 
