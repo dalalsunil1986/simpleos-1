@@ -15,3 +15,4 @@ qemu: out/boot_sector.bin
 test: out/boot_sector.bin
 	shellcheck test/*.sh
 	./test/boot_loader_size.sh $<
+	./test/boot_loader_signature.sh $<
