@@ -14,10 +14,13 @@
 ; software.
 ;
 ; In order to do so, the BIOS loads the first device's sector (the boot 
-; sector) (Cylinder 0, Head 0, Sector 0), 512 bytes, into RAM. If the 
-; read was successful, it checks the bytes 511 (offset 0x1FE) and 512 
-; (offset 0x1FF) are 0x55 and 0xAA respectively. This is known as the 
-; MBR signature. 
+; sector) (Cylinder 0, Head 0, Sector 0), 512 bytes, into memory at
+; address 0x7c00. It uses previous addresses to setup its ISRs 
+; (interrupt service routines) and more.
+;
+; If read was successful, it checks the bytes 511 (offset 0x1FE) and 
+; 512 (offset 0x1FF) are 0x55 and 0xAA respectively. This is known as 
+; the MBR signature. 
 ;
 ; If the BIOS recognised a valid boot loader software, it will transfer
 ; control by executing a jump instruction to the boot loader's first 
