@@ -37,9 +37,14 @@
 ; Boot loader program
 ; ---------------------------------------------------------------------
 
-; Infinite loop
-loop:
-    jmp loop 
+; "org" is an abbreviation for "origin address", and sets the 
+; "assembler location counter". It is used to specify the address that 
+; we expect a raw assembly program to be loaded at, so that, for 
+; convenience, all addresses we specify in the remaining program are 
+; offseted automatically from there.
+; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
+
+[org 0x7c00]
 
 ; ---------------------------------------------------------------------
 ; Fill the remaining code, until offset 510, with zeroes
