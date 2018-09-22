@@ -34,6 +34,8 @@
 
 ; This boot loader is written in Intel x86 Assembly
 ; See http://www.cs.virginia.edu/~evans/cs216/guides/x86.html
+; x86 CPUs have 4 general purpose registers: "ax", "bx", "cx", "dx",
+; all of which can hold 2 bytes of data.
 
 ; ---------------------------------------------------------------------
 ; Boot loader program
