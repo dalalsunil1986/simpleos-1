@@ -7,7 +7,7 @@ out:
 out/boot_sector.bin: src/boot_sector.asm src/strings.asm | out
 	# Output boot sector "raw" format, without additional
 	# metadata for linkers, etc
-	nasm -I src/ -f bin $< -o $@
+	nasm -I src/ -f bin -D ORIGIN_ADDRESS=0x7c00 $< -o $@
 	hexdump -x $@
 
 qemu: out/boot_sector.bin

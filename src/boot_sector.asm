@@ -45,8 +45,7 @@
 ; convenience, all addresses we specify in the remaining program are 
 ; offseted automatically from there.
 ; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
-
-[org 0x7c00]
+[org ORIGIN_ADDRESS]
 
 mov bx, welcome_message
 call print_string
