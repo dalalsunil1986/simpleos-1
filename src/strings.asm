@@ -11,6 +11,7 @@
 ; call print_string
 ; foo:
 ;   db 'Hello World', 0
+; ---------------------------------------------------------------------
 
 print_string:
   ; Push all the registers to the stack
