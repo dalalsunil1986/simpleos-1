@@ -16,7 +16,9 @@
 ; In order to do so, the BIOS loads the first device's sector (the boot 
 ; sector) (Cylinder 0, Head 0, Sector 0), 512 bytes, into memory at
 ; address 0x7c00. It uses previous addresses to setup its ISRs 
-; (interrupt service routines) and more.
+; (interrupt service routines) and more.  Each interrupt is represented 
+; by an index to the interrupt vector table, added by the BIOS at 
+; address 0x0.
 ;
 ; If read was successful, it checks the bytes 511 (offset 0x1FE) and 
 ; 512 (offset 0x1FF) are 0x55 and 0xAA respectively. This is known as 
@@ -45,6 +47,21 @@
 ; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
 
 [org 0x7c00]
+
+mov bx, welcome_message
+call print_string
+
+; Infinite loop
+jmp $
+
+; Utility functions
+%include "strings.asm"
+
+; "db" defines an array of 1 byte elements. The assembler automatically 
+; converts strings to ASCII when using quotes. The trailing zero is a 
+; null-terminator so we can know where the string ends.
+welcome_message:
+  db 'Welcome to SimpleOS', 0
 
 ; ---------------------------------------------------------------------
 ; Fill the remaining code, until offset 510, with zeroes

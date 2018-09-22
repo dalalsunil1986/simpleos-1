@@ -4,10 +4,10 @@
 out:
 	mkdir $@
 
-out/boot_sector.bin: src/boot_sector.asm | out
+out/boot_sector.bin: src/boot_sector.asm src/strings.asm | out
 	# Output boot sector "raw" format, without additional
 	# metadata for linkers, etc
-	nasm -f bin $< -o $@
+	nasm -I src/ -f bin $< -o $@
 	hexdump -x $@
 
 qemu: out/boot_sector.bin
