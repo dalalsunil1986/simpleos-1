@@ -22,3 +22,4 @@ References
 - http://www.cs.virginia.edu/~evans/cs216/guides/x86.html
 - https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
 - https://en.wikipedia.org/wiki/BIOS_interrupt_call
+- https://en.wikipedia.org/wiki/ASCII
