@@ -23,3 +23,6 @@ References
 - https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
 - https://en.wikipedia.org/wiki/BIOS_interrupt_call
 - https://en.wikipedia.org/wiki/ASCII
+- https://en.wikipedia.org/wiki/Real_mode
+- https://en.wikipedia.org/wiki/Protected_mode
+- https://wiki.osdev.org/Global_Descriptor_Table
