@@ -1,3 +1,13 @@
+; The "0x0e" mode is "Write Character in TTY Mode", which we
+; can use to print a character from the lower end of "ax".
+; See https://en.wikipedia.org/wiki/BIOS_interrupt_call
+%define BIOS_ISR_FUNCTION_DISPLAY_CHARACTER 0x0e
+
+; The ISR at 0x10 is the BIOS Video Services interrupt, which
+; can perform various tasks such as setting the cursor position,
+; the border color, and much more.
+%define BIOS_INTERRUPT_VECTOR_VIDEO_SERVICES 0x10
+
 ; ---------------------------------------------------------------------
 ; Print a string
 ; ---------------------------------------------------------------------
@@ -26,14 +36,10 @@ print_string_start:
 
   ; Certain ISRs do many different tasks depending on the "mode"
   ; we set at the higher end of "ah".
-  ; The ISR at 0x10 is the BIOS Video Service interrupt, which
-  ; can perform various tasks such as setting the cursor position,
-  ; the border color, and much more.
-  ; The "0x0e" mode is "Write Character in TTY Mode", which we
-  ; can use to print a character from the lower end of "ax".
-  ; See https://en.wikipedia.org/wiki/BIOS_interrupt_call
-  mov ah, 0x0e
-  int 0x10
+  ; The "Write Character in TTY Mode" is used to print a character
+  ; from the lower end of "ax".
+  mov ah, BIOS_ISR_FUNCTION_DISPLAY_CHARACTER
+  int BIOS_INTERRUPT_VECTOR_VIDEO_SERVICES
 
   ; Increment the address at "bx" by 1 byte, effectively
   ; going to the next ASCII character in the string.
