@@ -20,11 +20,11 @@
 ; Attributes consist of 1 byte where the first bit is the blink bit,
 ; the next 3 bits define the background color, and the remaining 4
 ; bits define to foreground color.
-; White is 0xf and black is 0x0, so white text on a black background
-; is represented as 0x0f, which equals 00001111.
+; White is 0xf and blue is 0x1, so white text on a blue background
+; is represented as 0x1f, which equals 00001111.
 ;
 ; See https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
-%define ATTRIBUTE_WHITE_ON_BLACK 00001111b
+%define ATTRIBUTE_WHITE_ON_BLUE 00011111b
 
 ; ---------------------------------------------------------------------
 ; Print an ASCII string
@@ -50,7 +50,7 @@ vga_print_string_ascii_start:
   ; Move the address at "ebx" to the first 8 bits of "ax"
   mov al, [ebx]
   ; Set basic character attributes on the last 8 bits of "ax"
-  mov ah, ATTRIBUTE_WHITE_ON_BLACK
+  mov ah, ATTRIBUTE_WHITE_ON_BLUE
 
   ; If the first 8 bits of "ax" equal 0
   cmp al, 0
