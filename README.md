@@ -26,3 +26,9 @@ References
 - https://en.wikipedia.org/wiki/Real_mode
 - https://en.wikipedia.org/wiki/Protected_mode
 - https://wiki.osdev.org/Global_Descriptor_Table
+- https://en.wikipedia.org/wiki/Control_register
+- https://techdecoded.intel.io/resources/understanding-the-instruction-pipeline/
+- https://en.wikipedia.org/wiki/Instruction_pipelining
+- https://stackoverflow.com/questions/8691807/whats-the-difference-between-define-and-equ-in-nasm#8691881
+- https://en.wikipedia.org/wiki/X86_memory_segmentation
+- https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture

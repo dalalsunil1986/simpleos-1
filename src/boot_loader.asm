@@ -38,7 +38,7 @@
 ; all of which can hold 2 bytes of data.
 
 ; ---------------------------------------------------------------------
-; Boot loader program
+; Real Mode
 ; ---------------------------------------------------------------------
 
 ; "org" is an abbreviation for "origin address", and sets the
@@ -59,22 +59,45 @@
 mov bp, (ORIGIN_ADDRESS + STACK_SIZE)
 mov sp, bp
 
+; Initial boot messages
 mov bx, welcome_message
 call print_string_ascii
 call print_ln
+mov bx, real_mode_start_message
+call print_string_ascii
+call print_ln
 
-; Infinite loop
+; This function will switch to protected mode and then jump to the
+; PROTECTED_MODE_SWITCH. We will never return from this function
+call protected_mode_switch
+; An infinite loop. We should never get here if the switch went fine
 jmp $
 
 ; Utilities
 %include "strings.asm"
-%include "gdt.asm"
+%include "protected_mode.asm"
+
+; ---------------------------------------------------------------------
+; Protected Mode
+; ---------------------------------------------------------------------
+
+[bits 32]
+
+PROTECTED_MODE_BEGIN:
+  jmp $
+
+; ---------------------------------------------------------------------
+; Messages
+; ---------------------------------------------------------------------
 
 ; "db" defines an array of 1 byte elements. The assembler automatically
 ; converts strings to ASCII when using quotes. The trailing zero is a
 ; null-terminator so we can know where the string ends.
 welcome_message:
   db 'Welcome to SimpleOS', 0
+
+real_mode_start_message:
+  db "Started in 16-bit Real Mode", 0
 
 ; ---------------------------------------------------------------------
 ; Fill the remaining code, until offset 510, with zeroes
