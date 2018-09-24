@@ -51,6 +51,7 @@
 
 mov bx, welcome_message
 call print_string
+call print_ln
 
 ; Infinite loop
 jmp $
