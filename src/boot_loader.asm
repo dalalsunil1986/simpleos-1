@@ -1,5 +1,5 @@
 ; ---------------------------------------------------------------------
-; Boot Sector
+; Boot Loader
 ; ---------------------------------------------------------------------
 ;
 ; When the computer is turned on, it starts executing a firmware
