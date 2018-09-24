@@ -108,12 +108,5 @@ protected_mode_init:
   ; The two unspecified "fs" and "gs" segments
   mov fs, ax
   mov gs, ax
-
-  ; TODO: Why do we update the stack again?
-  ; TODO: Why 0x90000?
-  mov ebp, 0x90000
-  mov esp, ebp
-
   ; Go to the user's specified label
-  ; TODO: Why is this not a jmp?
-  call PROTECTED_MODE_BEGIN
+  jmp PROTECTED_MODE_BEGIN

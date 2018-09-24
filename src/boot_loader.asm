@@ -56,7 +56,8 @@
 ; Here we configure the stack to start a bit above the address where
 ; BIOS loads the boot loader so we have some room to breathe when
 ; growing down
-mov bp, (ORIGIN_ADDRESS + STACK_SIZE)
+%define REAL_MODE_STACK_ADDRESS (ORIGIN_ADDRESS + STACK_SIZE)
+mov bp, REAL_MODE_STACK_ADDRESS
 mov sp, bp
 
 ; Initial boot messages
@@ -85,6 +86,15 @@ jmp $
 [bits 32]
 
 PROTECTED_MODE_BEGIN:
+  ; Re-configure the 32-bit stack pointers to the same stack
+  ; address as before.
+  ; In real mode, addressing works by multiplying the value in the
+  ; segment register by 16 and then adding the offset address. This
+  ; means that we have to multiply the stack address we calculated
+  ; before while on real mode by 16 in order to get the absolute one.
+  mov ebp, (REAL_MODE_STACK_ADDRESS * 16)
+  mov esp, ebp
+
   mov ebx, protected_mode_start_message
   call vga_print_string_ascii
   jmp $
