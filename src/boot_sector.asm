@@ -55,8 +55,9 @@ call print_string
 ; Infinite loop
 jmp $
 
-; Utility functions
+; Utilities
 %include "strings.asm"
+%include "gdt.asm"
 
 ; "db" defines an array of 1 byte elements. The assembler automatically
 ; converts strings to ASCII when using quotes. The trailing zero is a
