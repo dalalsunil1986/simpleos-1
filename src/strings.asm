@@ -61,7 +61,7 @@ print_string_done:
 ; Go to a new line
 ; ---------------------------------------------------------------------
 ;
-; This routine will not modify any registers.
+; This routine does not take any parameters.
 ;
 ; Example:
 ;
