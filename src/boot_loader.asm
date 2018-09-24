@@ -76,6 +76,7 @@ jmp $
 ; Utilities
 %include "strings_bios.asm"
 %include "protected_mode.asm"
+%include "strings_vga.asm"
 
 ; ---------------------------------------------------------------------
 ; Protected Mode
@@ -84,6 +85,8 @@ jmp $
 [bits 32]
 
 PROTECTED_MODE_BEGIN:
+  mov ebx, protected_mode_start_message
+  call vga_print_string_ascii
   jmp $
 
 ; ---------------------------------------------------------------------
@@ -98,6 +101,9 @@ welcome_message:
 
 real_mode_start_message:
   db "Started in 16-bit Real Mode", 0
+
+protected_mode_start_message:
+  db "Started in 32-bit Protected Mode", 0
 
 ; ---------------------------------------------------------------------
 ; Fill the remaining code, until offset 510, with zeroes
