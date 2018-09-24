@@ -106,12 +106,11 @@ PROTECTED_MODE_BEGIN:
 ; "db" defines an array of 1 byte elements. The assembler automatically
 ; converts strings to ASCII when using quotes. The trailing zero is a
 ; null-terminator so we can know where the string ends.
+
 welcome_message:
   db 'Welcome to SimpleOS', 0
-
 real_mode_start_message:
   db "Started in 16-bit Real Mode", 0
-
 protected_mode_start_message:
   db "Started in 32-bit Protected Mode", 0
 
