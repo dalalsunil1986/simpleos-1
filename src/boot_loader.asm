@@ -50,7 +50,7 @@
 [org ORIGIN_ADDRESS]
 
 mov bx, welcome_message
-call print_string
+call print_string_ascii
 call print_ln
 
 ; Infinite loop

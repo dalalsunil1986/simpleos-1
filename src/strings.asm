@@ -13,7 +13,7 @@
 %define ASCII_CARRIAGE_RETURN 0x0d
 
 ; ---------------------------------------------------------------------
-; Print a string
+; Print an ASCII string
 ; ---------------------------------------------------------------------
 ;
 ; This function expects the address of a null-terminated string in
@@ -22,21 +22,21 @@
 ; Example:
 ;
 ; mov bx, foo
-; call print_string
+; call print_string_ascii
 ; foo:
 ;   db 'Hello World', 0
 ; ---------------------------------------------------------------------
 
-print_string:
+print_string_ascii:
   ; Push all the registers to the stack
   pusha
-print_string_start:
+print_string_ascii_start:
   ; Move the address at "bx" to "ax"
   mov ax, [bx]
   ; If the first 8 bits of "ax" equal 0
   cmp al, 0
   ; Then we're done, as it is the null-terminator
-  je print_string_done
+  je print_string_ascii_done
 
   ; Certain ISRs do many different tasks depending on the "mode"
   ; we set at the higher end of "ah".
@@ -49,8 +49,8 @@ print_string_start:
   ; going to the next ASCII character in the string.
   add bx, BYTE 1
   ; Go back to the beginning
-  jmp print_string_start
-print_string_done:
+  jmp print_string_ascii_start
+print_string_ascii_done:
   ; Pop all the registers from the stack
   popa
   ; Pop the return address from the stack and jump to it
@@ -66,9 +66,9 @@ print_string_done:
 ; Example:
 ;
 ; mov bx, foo
-; call print_string
+; call print_string_ascii
 ; call print_ln
-; call print_string
+; call print_string_ascii
 ; foo:
 ;   db 'Hello World', 0
 ; ---------------------------------------------------------------------
