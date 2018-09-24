@@ -1,3 +1,7 @@
+; ---------------------------------------------------------------------
+; String utility functions using BIOS ISRs
+; ---------------------------------------------------------------------
+
 ; The "0x0e" mode is "Write Character in TTY Mode", which we
 ; can use to print a character from the lower end of "ax".
 ; See https://en.wikipedia.org/wiki/BIOS_interrupt_call
@@ -22,21 +26,21 @@
 ; Example:
 ;
 ; mov bx, foo
-; call print_string_ascii
+; call bios_print_string_ascii
 ; foo:
 ;   db 'Hello World', 0
 ; ---------------------------------------------------------------------
 
-print_string_ascii:
+bios_print_string_ascii:
   ; Push all the registers to the stack
   pusha
-print_string_ascii_start:
+bios_print_string_ascii_start:
   ; Move the address at "bx" to "ax"
   mov ax, [bx]
   ; If the first 8 bits of "ax" equal 0
   cmp al, 0
   ; Then we're done, as it is the null-terminator
-  je print_string_ascii_done
+  je bios_print_string_ascii_done
 
   ; Certain ISRs do many different tasks depending on the "mode"
   ; we set at the higher end of "ah".
@@ -49,8 +53,8 @@ print_string_ascii_start:
   ; going to the next ASCII character in the string.
   add bx, BYTE 1
   ; Go back to the beginning
-  jmp print_string_ascii_start
-print_string_ascii_done:
+  jmp bios_print_string_ascii_start
+bios_print_string_ascii_done:
   ; Pop all the registers from the stack
   popa
   ; Pop the return address from the stack and jump to it
@@ -66,14 +70,14 @@ print_string_ascii_done:
 ; Example:
 ;
 ; mov bx, foo
-; call print_string_ascii
-; call print_ln
-; call print_string_ascii
+; call bios_print_string_ascii
+; call bios_print_ln
+; call bios_print_string_ascii
 ; foo:
 ;   db 'Hello World', 0
 ; ---------------------------------------------------------------------
 
-print_ln:
+bios_print_ln:
   ; Push all the registers to the stack
   pusha
   ; Set the display character mode

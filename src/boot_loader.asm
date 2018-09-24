@@ -61,11 +61,11 @@ mov sp, bp
 
 ; Initial boot messages
 mov bx, welcome_message
-call print_string_ascii
-call print_ln
+call bios_print_string_ascii
+call bios_print_ln
 mov bx, real_mode_start_message
-call print_string_ascii
-call print_ln
+call bios_print_string_ascii
+call bios_print_ln
 
 ; This function will switch to protected mode and then jump to the
 ; PROTECTED_MODE_SWITCH. We will never return from this function
@@ -74,7 +74,7 @@ call protected_mode_switch
 jmp $
 
 ; Utilities
-%include "strings.asm"
+%include "strings_bios.asm"
 %include "protected_mode.asm"
 
 ; ---------------------------------------------------------------------
