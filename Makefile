@@ -1,7 +1,11 @@
 .PHONY: qemu test
 .DEFAULT_GOAL = qemu
 
-BOOT_LOADER_HELPERS_ASM = src/strings_bios.asm src/strings_vga.asm src/gdt.asm src/protected_mode.asm
+BOOT_LOADER_HELPERS_ASM = \
+	src/strings_bios.asm \
+	src/strings_vga.asm \
+	src/gdt.asm \
+	src/protected_mode.asm
 
 out:
 	mkdir $@
