@@ -49,6 +49,16 @@
 ; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
 [org ORIGIN_ADDRESS]
 
+; BP and SP are registers that control the stack. BP points to the base
+; of the stack, and SP points to the top of the stack.
+; The stack grows down, and the SP register changes every time we push
+; or pop the stack.
+; Here we configure the stack to start a bit above the address where
+; BIOS loads the boot loader so we have some room to breathe when
+; growing down
+mov bp, (ORIGIN_ADDRESS + STACK_SIZE)
+mov sp, bp
+
 mov bx, welcome_message
 call print_string_ascii
 call print_ln

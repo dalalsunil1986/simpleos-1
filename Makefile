@@ -7,7 +7,7 @@ out:
 out/boot_loader.bin: src/boot_loader.asm src/strings.asm src/gdt.asm | out
 	# Output boot sector "raw" format, without additional
 	# metadata for linkers, etc
-	nasm -I src/ -f bin -D ORIGIN_ADDRESS=0x7c00 $< -o $@
+	nasm -I src/ -f bin -D ORIGIN_ADDRESS=0x7c00 -D STACK_SIZE=0x1400 $< -o $@
 	xxd $@
 
 qemu: out/boot_loader.bin
