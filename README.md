@@ -33,3 +33,4 @@ References
 - https://en.wikipedia.org/wiki/X86_memory_segmentation
 - https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
 - https://en.wikipedia.org/wiki/VGA-compatible_text_mode
+- https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette

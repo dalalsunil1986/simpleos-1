@@ -17,7 +17,14 @@
 ; See https://en.wikipedia.org/wiki/VGA-compatible_text_mode
 %define VGA_TEXT_BUFFER 0xb8000
 
-%define ATTRIBUTE_WHITE_ON_BLACK 0x0f
+; Attributes consist of 1 byte where the first bit is the blink bit,
+; the next 3 bits define the background color, and the remaining 4
+; bits define to foreground color.
+; White is 0xf and black is 0x0, so white text on a black background
+; is represented as 0x0f, which equals 00001111.
+;
+; See https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
+%define ATTRIBUTE_WHITE_ON_BLACK 00001111b
 
 ; ---------------------------------------------------------------------
 ; Print an ASCII string
