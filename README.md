@@ -7,7 +7,7 @@ Dependencies
 ### macOS
 
 ```
-brew install qemu nasm shellcheck
+brew install qemu nasm shellcheck gmp mpfr libmpc gcc
 ```
 
 References
@@ -34,3 +34,4 @@ References
 - https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture
 - https://en.wikipedia.org/wiki/VGA-compatible_text_mode
 - https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
+- https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler
