@@ -2,3 +2,7 @@
 	path = deps/binutils
 	url = git://sourceware.org/git/binutils-gdb.git
 	branch = binutils-2_24-branch
+[submodule "deps/gcc"]
+	path = deps/gcc
+	url = git://gcc.gnu.org/git/gcc.git
+	branch = gcc-4_9-branch
