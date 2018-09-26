@@ -2,7 +2,6 @@
 # Cross-Compiler
 # ---------------------------------------------------------------------
 
-HOST_PREFIX ?= /usr/local
 HOST_CC ?= gcc-8
 HOST_CXX ?= g++-8
 
@@ -14,30 +13,21 @@ HOST_CXX ?= g++-8
 
 CROSS_COMPILER_TARGET = i386-elf
 CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
-CROSS_COMPILER_BUILDENV = \
-	PATH=$(CROSS_COMPILER_PREFIX)/bin:$(PATH) \
-	CC=$(HOST_CC) \
-	CXX=$(HOST_CXX) \
-	LIBRARY_PATH=$(HOST_PREFIX)/lib \
-	LD_LIBRARY_PATH=$(HOST_PREFIX)/lib \
-	DYLD_LIBRARY_PATH=$(HOST_PREFIX)/lib
 
 crosscompiler: | .tmp .toolchain
 	mkdir -p $(word 1,$|)/binutils-build
-	cd $(word 1,$|)/binutils-build && $(CROSS_COMPILER_BUILDENV) ../../deps/binutils/configure \
+	cd $(word 1,$|)/binutils-build && CC=$(HOST_CC) ../../deps/binutils/configure \
 		--target=$(CROSS_COMPILER_TARGET) \
 		--prefix=$(CROSS_COMPILER_PREFIX) \
-		--enable-interwork \
-		--enable-multilib \
-		--disable-nls \
 		--disable-werror
 	cd $(word 1,$|)/binutils-build && make all install
 	mkdir -p $(word 1,$|)/gcc-build
-	cd $(word 1,$|)/gcc-build && $(CROSS_COMPILER_BUILDENV) ../../deps/gcc/configure \
+	cd $(word 1,$|)/gcc-build && PATH=$(CROSS_COMPILER_PREFIX)/bin:$(PATH) \
+		CC=$(HOST_CC) CXX=$(HOST_CXX) ../../deps/gcc/configure \
 		--target=$(CROSS_COMPILER_TARGET) \
 		--prefix=$(CROSS_COMPILER_PREFIX) \
-		--disable-nls \
 		--disable-libssp \
+		--disable-libstdcxx \
 		--enable-languages=c \
 		--without-headers
 	cd $(word 1,$|)/gcc-build && make \
