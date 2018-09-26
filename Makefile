@@ -34,13 +34,20 @@ crosscompiler: | .tmp
 # Operating System
 # ---------------------------------------------------------------------
 
-# CFLAGS += -Wall \
-					# -Wextra \
-					# -Werror \
-					# -Wshadow \
-					# -Wwrite-strings \
-					# -Wconversion \
-					# -Wcast-qual
+# A free-standing environment assumes nothing about typical
+# built-in C functions. Without it, the compiler might see
+# something like "strcpy" and optimise such call away with
+# special intructions. Basically, behave as if there is no
+# concept of a standard library.
+CROSS_COMPILER_CFLAGS = \
+	-ffreestanding \
+	-Wall \
+	-Wextra \
+	-Werror \
+	-Wshadow \
+	-Wwrite-strings \
+	-Wconversion \
+	-Wcast-qual
 
 BOOT_LOADER_HELPERS_ASM = \
 	src/strings_bios.asm \
@@ -67,17 +74,14 @@ out/boot_loader.bin: src/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
 	xxd $@
 
 out/kernel.o: src/kernel.c | out
-	# A free-standing environment assumes nothing about typical
-	# built-in C functions. Without it, the compiler might see
-	# something like "strcpy" and optimise such call away with
-	# special intructions. Basically, behave as if there is no
-	# concept of a standard library.
-	gcc $(CFLAGS) -ffreestanding -c $< -o $@
+	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-gcc \
+		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
 out/kernel.bin: out/kernel.o
 	# TODO: -Ttext seems to be the origin address where the kernel
 	# will be loaded. Exactly the same as [org 0x1000] in NASM
-	ld -o $@ -Ttext 0x1000 $< --oformat binary
+	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
+		-o $@ -Ttext 0x1000 $< --oformat binary
 
 out/image.bin: out/boot_loader.bin out/kernel.bin
 	cat $* > $@
