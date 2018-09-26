@@ -2,18 +2,58 @@
 # Cross-Compiler
 # ---------------------------------------------------------------------
 
+HOST_PREFIX ?= /usr/local
+HOST_CC ?= gcc-8
+HOST_CXX ?= g++-8
+
+.tmp:
+	mkdir $@
+
+.toolchain:
+	mkdir $@
+
+CROSS_COMPILER_TARGET = i386-elf
+CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
+CROSS_COMPILER_BUILDENV = \
+	PATH=$(CROSS_COMPILER_PREFIX)/bin:$(PATH) \
+	CC=$(HOST_CC) \
+	CXX=$(HOST_CXX) \
+	LIBRARY_PATH=$(HOST_PREFIX)/lib \
+	LD_LIBRARY_PATH=$(HOST_PREFIX)/lib \
+	DYLD_LIBRARY_PATH=$(HOST_PREFIX)/lib
+
+crosscompiler: | .tmp .toolchain
+	mkdir -p $(word 1,$|)/binutils-build
+	cd $(word 1,$|)/binutils-build && $(CROSS_COMPILER_BUILDENV) ../../deps/binutils/configure \
+		--target=$(CROSS_COMPILER_TARGET) \
+		--prefix=$(CROSS_COMPILER_PREFIX) \
+		--enable-interwork \
+		--enable-multilib \
+		--disable-nls \
+		--disable-werror
+	cd $(word 1,$|)/binutils-build && make all install
+	mkdir -p $(word 1,$|)/gcc-build
+	cd $(word 1,$|)/gcc-build && $(CROSS_COMPILER_BUILDENV) ../../deps/gcc/configure \
+		--target=$(CROSS_COMPILER_TARGET) \
+		--prefix=$(CROSS_COMPILER_PREFIX) \
+		--disable-nls \
+		--disable-libssp \
+		--enable-languages=c \
+		--without-headers
+	cd $(word 1,$|)/gcc-build && make \
+		all-gcc all-target-libgcc install-gcc install-target-libgcc
 
 # ---------------------------------------------------------------------
 # Operating System
 # ---------------------------------------------------------------------
 
-CFLAGS += -Wall \
-					-Wextra \
-					-Werror \
-					-Wshadow \
-					-Wwrite-strings \
-					-Wconversion \
-					-Wcast-qual
+# CFLAGS += -Wall \
+					# -Wextra \
+					# -Werror \
+					# -Wshadow \
+					# -Wwrite-strings \
+					# -Wconversion \
+					# -Wcast-qual
 
 BOOT_LOADER_HELPERS_ASM = \
 	src/strings_bios.asm \
@@ -60,7 +100,7 @@ out/image.bin: out/boot_loader.bin out/kernel.bin
 # ---------------------------------------------------------------------
 
 .DEFAULT_GOAL = qemu
-.PHONY: qemu test
+.PHONY: qemu test distclean crosscompiler
 
 qemu: out/boot_loader.bin
 	# Press Alt-2 and type "quit" to exit
@@ -70,3 +110,8 @@ test: out/boot_loader.bin
 	shellcheck test/*.sh
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
+
+distclean:
+	rm -rf out
+	rm -rf .toolchain
+	rm -rf .tmp
