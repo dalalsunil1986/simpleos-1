@@ -8,14 +8,11 @@ HOST_CXX ?= g++-8
 .tmp:
 	mkdir $@
 
-.toolchain:
-	mkdir $@
-
 CROSS_COMPILER_TARGET = i386-elf
 CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
 
-crosscompiler: | .tmp .toolchain
-	mkdir -p $(word 1,$|)/binutils-build
+crosscompiler: | .tmp
+	mkdir -p $(word 1,$|)/binutils-build $(CROSS_COMPILER_PREFIX)
 	cd $(word 1,$|)/binutils-build && CC=$(HOST_CC) ../../deps/binutils/configure \
 		--target=$(CROSS_COMPILER_TARGET) \
 		--prefix=$(CROSS_COMPILER_PREFIX) \
