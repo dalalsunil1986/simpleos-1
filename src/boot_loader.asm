@@ -136,7 +136,7 @@ PROTECTED_MODE_BEGIN:
   call vga_print_string_ascii
 
   ; Jump to the address where we loaded the kernel
-  ; call KERNEL_OFFSET
+  call KERNEL_OFFSET
 
   jmp $
 
