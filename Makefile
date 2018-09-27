@@ -90,6 +90,7 @@ CROSS_COMPILER_CFLAGS = \
 BOOT_LOADER_HELPERS_ASM = \
 	src/strings_bios.asm \
 	src/strings_vga.asm \
+	src/bios_io.asm \
 	src/gdt.asm \
 	src/protected_mode.asm
 

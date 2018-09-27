@@ -76,6 +76,7 @@ jmp $
 
 ; Utilities
 %include "strings_bios.asm"
+%include "bios_io.asm"
 %include "protected_mode.asm"
 %include "strings_vga.asm"
 
