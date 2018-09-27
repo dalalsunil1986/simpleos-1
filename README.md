@@ -35,3 +35,6 @@ References
 - https://en.wikipedia.org/wiki/VGA-compatible_text_mode
 - https://en.wikipedia.org/wiki/Video_Graphics_Array#Color_palette
 - https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler
+- https://wiki.osdev.org/Stack_Smashing_Protector
+- https://gcc.gnu.org/install/configure.html
+- https://wiki.osdev.org/GCC_Cross-Compiler
