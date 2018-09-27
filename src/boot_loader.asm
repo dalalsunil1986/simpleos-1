@@ -98,22 +98,30 @@ BOOT_DRIVE:
 ; Just to be safe, as some utilities might have changed it
 [bits 16]
 
+; Load the kernel from the disk into a known location
 boot_loader_kernel_load:
-  ; Read 15 bytes from the known kernel location from the boot drive
-  ; TODO: Where is it getting loaded? Looks like bios_io_read_drive
-  ; hardcodes information about this.
-  ; TODO: Why just 15 sectors? Can this be precomputed?
-  mov bx, KERNEL_OFFSET
+  ; Push all the registers to the stack
+  pusha
+
+  ; We will read the kernel from the drive we booted from
   mov dl, [BOOT_DRIVE]
+  ; We will read the kernel into the configured offset
+  mov bx, KERNEL_OFFSET
+
+  ; -------------------------------------------
+  ; TODO: Why just 15 sectors? Can this be precomputed?
   mov dh, 15
+  mov ch, 0x00 ; cylinder
+  mov ah, 0x00 ; head
   ; TODO: We know that the kernel is on the second sector as we
   ; appended it right after the boot loader, but we should be
   ; able to infer this automatically, without hardcoding a sector
   ; number
   mov cl, 0x02
-  ; The cylinder to read from
-  mov ch, 0x00
-  mov ah, 0x00 ; head
+  ; -------------------------------------------
+
+  ; Execute the read operation. We might continue
+  ; from here if there was an error
   call bios_io_read_drive
 
   ; Informational message
@@ -121,7 +129,9 @@ boot_loader_kernel_load:
   call bios_print_string_ascii
   call bios_print_ln
 
-  ; Go back to where we were before
+  ; Pop all the registers from the stack
+  popa
+  ; Pop the return address from the stack and jump to it
   ret
 
 ; ---------------------------------------------------------------------
