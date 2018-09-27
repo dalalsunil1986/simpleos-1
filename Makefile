@@ -83,6 +83,11 @@ out/kernel.bin: out/kernel.o
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
 		-o $@ -Ttext 0x1000 $< --oformat binary
 
+# For debugging purposes
+out/kernel.asm: out/kernel.bin
+	# Set the processor mode to 32-bit
+	ndisasm -b 32 $< > $@
+
 out/image.bin: out/boot_loader.bin out/kernel.bin
 	cat $* > $@
 
