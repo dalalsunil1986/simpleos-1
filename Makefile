@@ -141,25 +141,28 @@ out/kernel.asm: out/kernel.bin
 # the loading routine, we put the kernel right after the boot
 # loader, so we always know where to look
 out/image.bin: out/boot_loader.bin out/kernel.bin
-	cat $* > $@
+	cat $^ > $@
 
 # ---------------------------------------------------------------------
 # Phony Targets
 # ---------------------------------------------------------------------
 
 .DEFAULT_GOAL = qemu
-.PHONY: qemu test distclean crosscompiler
+.PHONY: qemu test clean distclean crosscompiler
 
-qemu: out/boot_loader.bin
+qemu: out/image.bin
 	# Press Alt-2 and type "quit" to exit
-	qemu-system-i386 --curses $<
+	# -fda: Set the image as floppy disk 0
+	qemu-system-i386 --curses -drive format=raw,file=$<,index=0,if=floppy
 
 test: out/boot_loader.bin
 	shellcheck test/*.sh
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 
-distclean:
+clean:
 	rm -rf out
+
+distclean: clean
 	rm -rf .toolchain
 	rm -rf .tmp

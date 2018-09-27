@@ -49,6 +49,11 @@
 ; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
 [org ORIGIN_ADDRESS]
 
+; The BIOS stores the drive number being booted from on this register.
+; Here we save it into a memorable location for later use.
+; We can then use this number when doing BIOS I/O operations.
+mov [BOOT_DRIVE], dl
+
 ; BP and SP are registers that control the stack. BP points to the base
 ; of the stack, and SP points to the top of the stack.
 ; The stack grows down, and the SP register changes every time we push
@@ -68,6 +73,11 @@ mov bx, real_mode_start_message
 call bios_print_string_ascii
 call bios_print_ln
 
+; Load the kernel into memory. We do this while still on real mode
+; as we can use the BIOS I/O utilities. This simplifies the task
+; as we don't have to write custom I/O drivers in assembly
+call boot_loader_kernel_load
+
 ; This function will switch to protected mode and then jump to the
 ; PROTECTED_MODE_SWITCH. We will never return from this function
 call protected_mode_switch
@@ -80,6 +90,32 @@ jmp $
 %include "protected_mode.asm"
 %include "strings_vga.asm"
 
+; Declare 1 byte that we can later use to store the boot drive.
+; We initially set it to zero
+BOOT_DRIVE:
+  db 0
+
+; Just to be safe, as some utilities might have changed it
+[bits 16]
+
+boot_loader_kernel_load:
+  ; Read 15 bytes from the known kernel location from the boot drive
+  ; TODO: Where is it getting loaded? Looks like bios_io_read_drive
+  ; hardcodes information about this.
+  ; TODO: Why just 15 sectors? Can this be precomputed?
+  mov bx, KERNEL_OFFSET
+  mov dh, 15
+  mov dl, [BOOT_DRIVE]
+  call bios_io_read_drive
+
+  ; Informational message
+  mov bx, kernel_loaded_message
+  call bios_print_string_ascii
+  call bios_print_ln
+
+  ; Go back to where we were before
+  ret
+
 ; ---------------------------------------------------------------------
 ; Protected Mode
 ; ---------------------------------------------------------------------
@@ -88,16 +124,20 @@ jmp $
 
 PROTECTED_MODE_BEGIN:
   ; Re-configure the 32-bit stack pointers to the same stack
-  ; address as before.
+  ; address as before
   ; In real mode, addressing works by multiplying the value in the
   ; segment register by 16 and then adding the offset address. This
   ; means that we have to multiply the stack address we calculated
-  ; before while on real mode by 16 in order to get the absolute one.
+  ; before while on real mode by 16 in order to get the absolute one
   mov ebp, (REAL_MODE_STACK_ADDRESS * 16)
   mov esp, ebp
 
   mov ebx, protected_mode_start_message
   call vga_print_string_ascii
+
+  ; Jump to the address where we loaded the kernel
+  ; call KERNEL_OFFSET
+
   jmp $
 
 ; ---------------------------------------------------------------------
@@ -110,6 +150,8 @@ PROTECTED_MODE_BEGIN:
 
 welcome_message:
   db 'Welcome to SimpleOS', 0
+kernel_loaded_message:
+  db 'Kernel loaded', 0
 real_mode_start_message:
   db "Started in 16-bit Real Mode", 0
 protected_mode_start_message:
