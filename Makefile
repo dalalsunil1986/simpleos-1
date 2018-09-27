@@ -129,7 +129,10 @@ out/kernel.bin: out/kernel.o
 
 # For debugging purposes
 out/kernel.asm: out/kernel.bin
-	# Set the processor mode to 32-bit
+	# Set the processor mode to 32-bit. Remember that the kernel
+	# always runs in protected mode, so we don't have to worry
+	# about part of the boot loader being written with 16-bit
+	# instructions
 	ndisasm -b 32 $< > $@
 
 # The BIOS only loads the boot loader, so we must manually
