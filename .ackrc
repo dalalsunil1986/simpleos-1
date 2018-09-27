@@ -1,0 +1,3 @@
+--ignore-dir=.toolchain
+--ignore-dir=.tmp
+--ignore-dir=deps
