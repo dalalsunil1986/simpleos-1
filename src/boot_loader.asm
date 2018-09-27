@@ -104,8 +104,16 @@ boot_loader_kernel_load:
   ; hardcodes information about this.
   ; TODO: Why just 15 sectors? Can this be precomputed?
   mov bx, KERNEL_OFFSET
-  mov dh, 15
   mov dl, [BOOT_DRIVE]
+  mov dh, 15
+  ; TODO: We know that the kernel is on the second sector as we
+  ; appended it right after the boot loader, but we should be
+  ; able to infer this automatically, without hardcoding a sector
+  ; number
+  mov cl, 0x02
+  ; The cylinder to read from
+  mov ch, 0x00
+  mov ah, 0x00 ; head
   call bios_io_read_drive
 
   ; Informational message
