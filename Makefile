@@ -108,7 +108,13 @@ out/kernel.o: src/kernel.c | out
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-gcc \
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
-out/kernel.bin: out/kernel.o
+# This piece of assembly will be linked at the beginning
+# of the compiled C code, therefore we must built it as
+# an ELF file, like the remaining of the kernel
+out/kernel_entry.o: src/kernel_entry.asm
+	nasm $< -f elf -o $@
+
+out/kernel.bin: out/kernel_entry.o out/kernel.o
 	# -Ttext <address>:
 	#     Set the address of the text section, which contains the
 	#     execute instructions from the kernel. We set this to the
@@ -117,7 +123,7 @@ out/kernel.bin: out/kernel.o
 	#     be relative to this address, effectively mirroring what
 	#     the NASM [org ADDRESS] directive did on the boot loader
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
-		-o $@ -Ttext $(KERNEL_ORIGIN_ADDRESS) $< --oformat binary
+		-o $@ -Ttext $(KERNEL_ORIGIN_ADDRESS) $^ --oformat binary
 
 # For debugging purposes
 out/kernel.asm: out/kernel.bin
