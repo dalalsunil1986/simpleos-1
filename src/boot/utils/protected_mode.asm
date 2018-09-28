@@ -1,4 +1,4 @@
-%include "gdt.asm"
+%include "utils/gdt.asm"
 
 ; Some handy macros for the locations of our
 ; code and data segment descriptors.

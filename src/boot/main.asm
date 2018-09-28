@@ -85,10 +85,10 @@ call protected_mode_switch
 jmp $
 
 ; Utilities
-%include "strings_bios.asm"
-%include "bios_io.asm"
-%include "protected_mode.asm"
-%include "strings_vga.asm"
+%include "utils/strings_bios.asm"
+%include "utils/bios_io.asm"
+%include "utils/protected_mode.asm"
+%include "utils/strings_vga.asm"
 
 ; Declare 1 byte that we can later use to store the boot drive.
 ; We initially set it to zero

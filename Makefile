@@ -59,13 +59,6 @@ CROSS_COMPILER_CFLAGS = \
 	-Wconversion \
 	-Wcast-qual
 
-BOOT_LOADER_HELPERS_ASM = \
-	src/boot/strings_bios.asm \
-	src/boot/strings_vga.asm \
-	src/boot/bios_io.asm \
-	src/boot/gdt.asm \
-	src/boot/protected_mode.asm
-
 # The BIOS automatically loads boot loaders into this
 # address, we can't put something else here
 BOOT_LOADER_ORIGIN_ADDRESS = 0x7c00
@@ -94,7 +87,7 @@ KERNEL_DISK_SIZE = 65536
 out:
 	mkdir $@
 
-out/boot_loader.bin: src/boot/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
+out/boot_loader.bin: src/boot/main.asm $(wildcard src/boot/utils/*.asm) | out
 	# Output boot sector "raw" format, without additional
 	# metadata for linkers, etc
 	nasm -I src/boot/ -f bin \
@@ -106,14 +99,14 @@ out/boot_loader.bin: src/boot/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
 		$< -o $@
 	xxd $@
 
-out/kernel.o: src/kernel.c | out
+out/kernel.o: src/kernel/main.c | out
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-gcc \
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
 # This piece of assembly will be linked at the beginning
 # of the compiled C code, therefore we must built it with
 # the same binary format.
-out/kernel_entry.o: src/kernel_entry.asm
+out/kernel_entry.o: src/kernel/entry.asm
 	nasm $< -f $(KERNEL_BINARY_FORMAT) -o $@
 
 out/kernel.bin: out/kernel_entry.o out/kernel.o
