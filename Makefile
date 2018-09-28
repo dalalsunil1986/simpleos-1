@@ -7,45 +7,15 @@
 HOST_CC ?= gcc-8
 HOST_CXX ?= g++-8
 
-.tmp:
-	mkdir $@
-
 # TODO: Why elf?
 CROSS_COMPILER_TARGET = i386-elf
 
 # The installation prefix directory for the toolchain
 CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
 
-crosscompiler: | .tmp
-	mkdir -p $(word 1,$|)/binutils-build $(CROSS_COMPILER_PREFIX)
-	# --disable-werror:
-	#     Disable the -Werror compiler flag, which turns
-	#     warnings into errors
-	cd $(word 1,$|)/binutils-build && CC=$(HOST_CC) ../../deps/binutils/configure \
-		--target=$(CROSS_COMPILER_TARGET) \
-		--prefix=$(CROSS_COMPILER_PREFIX) \
-		--disable-werror
-	cd $(word 1,$|)/binutils-build && make all install
-	mkdir -p $(word 1,$|)/gcc-build
-	cd $(word 1,$|)/gcc-build && PATH=$(CROSS_COMPILER_PREFIX)/bin:$(PATH) \
-		# --disable-libssp:
-		#     This is the "Stack Smashing Protector", a GCC feature
-	  #     to automatically re-write code to attempt to detect
-		#     stack buffer overruns. We disable this feature as we
-		#     don't want GCC to modify our code at all.
-		#     See: https://wiki.osdev.org/Stack_Smashing_Protector
-		# --enable-languages=c:
-		#     We're only interested in the C language
-		# --without-headers:
-		#     Don't rely on any libc library from the target
-		CC=$(HOST_CC) CXX=$(HOST_CXX) ../../deps/gcc/configure \
-		--target=$(CROSS_COMPILER_TARGET) \
-		--prefix=$(CROSS_COMPILER_PREFIX) \
-		--disable-libssp \
-		--enable-languages=c \
-		--without-headers
-	cd $(word 1,$|)/gcc-build && make \
-		all-gcc all-target-libgcc install-gcc install-target-libgcc
+crosscompiler:
+	CC=$(HOST_CC) CXX=$(HOST_CXX) \
+		./scripts/toolchain.sh $(CROSS_COMPILER_TARGET) $(CROSS_COMPILER_PREFIX)
 
 # ---------------------------------------------------------------------
 # Operating System
@@ -167,7 +137,7 @@ qemu: out/image.bin
 	qemu-system-i386 --curses -drive format=raw,file=$<,index=0,if=floppy
 
 test: out/boot_loader.bin
-	shellcheck test/*.sh
+	shellcheck scripts/*.sh test/*.sh
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 
@@ -176,4 +146,3 @@ clean:
 
 distclean: clean
 	rm -rf .toolchain
-	rm -rf .tmp
