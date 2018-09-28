@@ -81,7 +81,7 @@ KERNEL_DISK_ADDRESS = 0x1000
 # This value should be a multiple of 4096 (the sector size)
 # TODO: Write a test script that ensures the kernel
 # doesn't exceed this value
-KERNEL_DISK_SIZE = 0x10000
+KERNEL_DISK_SIZE = 65536
 
 out:
 	mkdir $@
@@ -136,10 +136,11 @@ qemu: out/image.bin
 	# -fda: Set the image as floppy disk 0
 	qemu-system-i386 --curses -drive format=raw,file=$<,index=0,if=floppy
 
-test: out/boot_loader.bin
+test: out/boot_loader.bin out/kernel.bin
 	shellcheck scripts/*.sh test/*.sh
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
+	./test/kernel_size.sh $(word 2,$^) $(KERNEL_DISK_SIZE)
 
 clean:
 	rm -rf out
