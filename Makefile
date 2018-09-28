@@ -8,7 +8,9 @@ HOST_CC ?= gcc-8
 HOST_CXX ?= g++-8
 
 # TODO: Why elf?
-CROSS_COMPILER_TARGET = i386-elf
+KERNEL_BINARY_FORMAT = elf
+
+CROSS_COMPILER_TARGET = i386-$(KERNEL_BINARY_FORMAT)
 
 # The installation prefix directory for the toolchain
 CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
@@ -109,10 +111,10 @@ out/kernel.o: src/kernel.c | out
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
 # This piece of assembly will be linked at the beginning
-# of the compiled C code, therefore we must built it as
-# an ELF file, like the remaining of the kernel
+# of the compiled C code, therefore we must built it with
+# the same binary format.
 out/kernel_entry.o: src/kernel_entry.asm
-	nasm $< -f elf -o $@
+	nasm $< -f $(KERNEL_BINARY_FORMAT) -o $@
 
 out/kernel.bin: out/kernel_entry.o out/kernel.o
 	# -Ttext <address>:
