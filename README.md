@@ -38,3 +38,4 @@ References
 - https://wiki.osdev.org/Stack_Smashing_Protector
 - https://gcc.gnu.org/install/configure.html
 - https://wiki.osdev.org/GCC_Cross-Compiler
+- https://www.nasm.us/doc/nasmdoc6.html

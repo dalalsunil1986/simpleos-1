@@ -60,11 +60,11 @@ CROSS_COMPILER_CFLAGS = \
 	-Wcast-qual
 
 BOOT_LOADER_HELPERS_ASM = \
-	src/strings_bios.asm \
-	src/strings_vga.asm \
-	src/bios_io.asm \
-	src/gdt.asm \
-	src/protected_mode.asm
+	src/boot/strings_bios.asm \
+	src/boot/strings_vga.asm \
+	src/boot/bios_io.asm \
+	src/boot/gdt.asm \
+	src/boot/protected_mode.asm
 
 # The BIOS automatically loads boot loaders into this
 # address, we can't put something else here
@@ -94,10 +94,10 @@ KERNEL_DISK_SIZE = 65536
 out:
 	mkdir $@
 
-out/boot_loader.bin: src/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
+out/boot_loader.bin: src/boot/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
 	# Output boot sector "raw" format, without additional
 	# metadata for linkers, etc
-	nasm -I src/ -f bin \
+	nasm -I src/boot/ -f bin \
 		-D BOOT_LOADER_ORIGIN_ADDRESS=$(BOOT_LOADER_ORIGIN_ADDRESS) \
 		-D STACK_SIZE=$(BOOT_LOADER_STACK_SIZE) \
 		-D KERNEL_ORIGIN_ADDRESS=$(KERNEL_ORIGIN_ADDRESS) \
