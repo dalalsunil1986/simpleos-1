@@ -7,7 +7,7 @@ Dependencies
 ### macOS
 
 ```
-brew install qemu nasm shellcheck gmp mpfr libmpc gcc
+brew install qemu nasm shellcheck gmp mpfr libmpc gcc vera++
 ```
 
 References

@@ -140,15 +140,18 @@ out/image.bin: out/boot_loader.bin out/kernel.bin
 # ---------------------------------------------------------------------
 
 .DEFAULT_GOAL = qemu
-.PHONY: qemu test clean distclean crosscompiler
+.PHONY: qemu lint test clean distclean crosscompiler
 
 qemu: out/image.bin
 	# Press Alt-2 and type "quit" to exit
 	# -fda: Set the image as floppy disk 0
 	qemu-system-i386 --curses -drive format=raw,file=$<,index=0,if=floppy
 
-test: out/boot_loader.bin out/kernel.bin
+lint:
 	shellcheck scripts/*.sh test/*.sh
+	vera++ --show-rule --summary --error src/kernel/*.c
+
+test: lint out/boot_loader.bin out/kernel.bin
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 	./test/kernel_size.sh $(word 2,$^) $(KERNEL_DISK_SIZE)
