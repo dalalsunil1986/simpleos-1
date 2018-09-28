@@ -102,8 +102,16 @@ BOOT_LOADER_ORIGIN_ADDRESS = 0x7c00
 BOOT_LOADER_STACK_SIZE = 0x1400
 
 # TODO: Why? Isn't this too low? (this is the second sector, at byte 512)
+# Would it be better to put it 512 bytes after the boot loader origin
+# address? ie 0x7c00 + (512 * 8)?
+# TODO: These are the same, but don't really need to
 KERNEL_ORIGIN_ADDRESS = 0x1000
 KERNEL_DISK_ADDRESS = 0x1000
+# 16 sectors should be enough for our kernel
+# This value should be a multiple of 4096 (the sector size)
+# TODO: Write a test script that ensures the kernel
+# doesn't exceed this value
+KERNEL_DISK_SIZE = 0x10000
 
 out:
 	mkdir $@
@@ -116,6 +124,7 @@ out/boot_loader.bin: src/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
 		-D STACK_SIZE=$(BOOT_LOADER_STACK_SIZE) \
 		-D KERNEL_ORIGIN_ADDRESS=$(KERNEL_ORIGIN_ADDRESS) \
 		-D KERNEL_DISK_ADDRESS=$(KERNEL_DISK_ADDRESS) \
+		-D KERNEL_DISK_SIZE=$(KERNEL_DISK_SIZE) \
 		$< -o $@
 	xxd $@
 

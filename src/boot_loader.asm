@@ -108,10 +108,10 @@ boot_loader_kernel_load:
   ; We will read the kernel into the configured offset
   mov bx, KERNEL_ORIGIN_ADDRESS
 
-  ; -------------------------------------------
-  ; TODO: Why just 15 sectors? Can this be precomputed?
-  mov dh, 15
-  ; -------------------------------------------
+  ; The number of sectors to read.
+  ; We know the kernel size as a multiple of 4096,
+  ; so we can easily convert that into a number of sectors
+  mov dh, (KERNEL_DISK_SIZE / 8 / 512)
 
   ; We assume the kernel is near enough to the beginning
   ; of the drive such that we can hardcode the cylinder (ch)
