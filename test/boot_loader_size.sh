@@ -2,21 +2,18 @@
 
 set -e
 BOOT_LOADER="$1"
-EXPECTED="$2"
 set -u
 
-if [ -z "$BOOT_LOADER" ] || [ -z "$EXPECTED" ]; then
-  echo "Usage: $0 <boot loader> <expected>" >&2
+if [ -z "$BOOT_LOADER" ]; then
+  echo "Usage: $0 <boot loader>" >&2
   exit 1
 fi
 
 BYTES="$(stat -f '%z' "$BOOT_LOADER")"
-BITS="$((BYTES * 8))"
 
-printf "Expected size: %s bits\\n" "$EXPECTED"
-printf "Boot loader size: %s bits -> " "$BITS"
+printf "Boot loader size: %s bytes -> " "$BYTES"
 
-if [ "$BITS" = "$EXPECTED" ]; then
+if [ "$BYTES" = "512" ]; then
   printf "PASS\\n"
   exit 0
 else

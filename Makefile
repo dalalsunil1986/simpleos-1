@@ -69,15 +69,16 @@ BOOT_LOADER_HELPERS_ASM = \
 BOOT_LOADER_ORIGIN_ADDRESS = 0x7c00
 
 # The boot loader should be one sector
-BOOT_LOADER_DISK_SIZE = 4096
+BOOT_LOADER_DISK_SIZE = 0x1000
 
 # A setting that we control
 BOOT_LOADER_STACK_SIZE = 0x1400
 
-# TODO: Why? Isn't this too low? (this is the second sector, at byte 512)
-# Would it be better to put it 512 bytes after the boot loader origin
-# address? ie $(BOOT_LOADER_ORIGIN_ADDRESS) + $(BOOT_LOADER_DISK_SIZE)
-KERNEL_ORIGIN_ADDRESS = 0x1000
+# The address where the kernel will be loaded in memory, relative
+# from the boot loader origin address, as we're setting [org ADDRESS]
+# in the boot loader. In this case, we will also load the kernel
+# right after the boot loader.
+KERNEL_ORIGIN_ADDRESS = $(BOOT_LOADER_DISK_SIZE)
 
 # The address in the disk where we expect to find the kernel.
 # We append the kernel to the boot loader, so this should be
@@ -147,7 +148,7 @@ qemu: out/image.bin
 
 test: out/boot_loader.bin out/kernel.bin
 	shellcheck scripts/*.sh test/*.sh
-	./test/boot_loader_size.sh $< $(BOOT_LOADER_DISK_SIZE)
+	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 	./test/kernel_size.sh $(word 2,$^) $(KERNEL_DISK_SIZE)
 
