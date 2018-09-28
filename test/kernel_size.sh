@@ -11,11 +11,12 @@ if [ -z "$KERNEL" ] || [ -z "$EXPECTED" ]; then
 fi
 
 BYTES="$(stat -f '%z' "$KERNEL")"
+BITS="$((BYTES * 8))"
 
-printf "Expected size: %s\\n" "$EXPECTED"
-printf "Kernel size: %s -> " "$BYTES"
+printf "Expected size: <=%s bits\\n" "$EXPECTED"
+printf "Kernel size: %s bits -> " "$BITS"
 
-if [ "$BYTES" -gt "$EXPECTED" ]; then
+if [ "$BITS" -gt "$EXPECTED" ]; then
   printf "FAIL\\n"
   exit 1
 else

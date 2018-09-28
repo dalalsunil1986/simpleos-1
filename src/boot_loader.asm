@@ -47,7 +47,7 @@
 ; convenience, all addresses we specify in the remaining program are
 ; offseted automatically from there.
 ; See https://www.nasm.us/xdoc/2.13.03/html/nasmdoc7.html#section-7.1.1
-[org ORIGIN_ADDRESS]
+[org BOOT_LOADER_ORIGIN_ADDRESS]
 
 ; The BIOS stores the drive number being booted from on this register.
 ; Here we save it into a memorable location for later use.
@@ -61,7 +61,7 @@ mov [BOOT_DRIVE], dl
 ; Here we configure the stack to start a bit above the address where
 ; BIOS loads the boot loader so we have some room to breathe when
 ; growing down
-%define REAL_MODE_STACK_ADDRESS (ORIGIN_ADDRESS + STACK_SIZE)
+%define REAL_MODE_STACK_ADDRESS (BOOT_LOADER_ORIGIN_ADDRESS + STACK_SIZE)
 mov bp, REAL_MODE_STACK_ADDRESS
 mov sp, bp
 
