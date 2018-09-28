@@ -101,8 +101,9 @@ BOOT_LOADER_ORIGIN_ADDRESS = 0x7c00
 # A setting that we control
 BOOT_LOADER_STACK_SIZE = 0x1400
 
-# TODO: Why? Isn't this too low?
+# TODO: Why? Isn't this too low? (this is the second sector, at byte 512)
 KERNEL_ORIGIN_ADDRESS = 0x1000
+KERNEL_DISK_ADDRESS = 0x1000
 
 out:
 	mkdir $@
@@ -113,7 +114,8 @@ out/boot_loader.bin: src/boot_loader.asm $(BOOT_LOADER_HELPERS_ASM) | out
 	nasm -I src/ -f bin \
 		-D ORIGIN_ADDRESS=$(BOOT_LOADER_ORIGIN_ADDRESS) \
 		-D STACK_SIZE=$(BOOT_LOADER_STACK_SIZE) \
-		-D KERNEL_OFFSET=$(KERNEL_ORIGIN_ADDRESS) \
+		-D KERNEL_ORIGIN_ADDRESS=$(KERNEL_ORIGIN_ADDRESS) \
+		-D KERNEL_DISK_ADDRESS=$(KERNEL_DISK_ADDRESS) \
 		$< -o $@
 	xxd $@
 
@@ -126,7 +128,7 @@ out/kernel.bin: out/kernel.o
 	# will be loaded. Exactly the same as [org 0x1000] in NASM
 	# Doesn't seem to be making any difference here
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
-		-o $@ -Ttext 0x1000 $< --oformat binary
+		-o $@ -Ttext $(KERNEL_ORIGIN_ADDRESS) $< --oformat binary
 
 # For debugging purposes
 out/kernel.asm: out/kernel.bin

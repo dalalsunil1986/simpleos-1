@@ -106,19 +106,22 @@ boot_loader_kernel_load:
   ; We will read the kernel from the drive we booted from
   mov dl, [BOOT_DRIVE]
   ; We will read the kernel into the configured offset
-  mov bx, KERNEL_OFFSET
+  mov bx, KERNEL_ORIGIN_ADDRESS
 
   ; -------------------------------------------
   ; TODO: Why just 15 sectors? Can this be precomputed?
   mov dh, 15
-  mov ch, 0x00 ; cylinder
-  mov ah, 0x00 ; head
-  ; TODO: We know that the kernel is on the second sector as we
-  ; appended it right after the boot loader, but we should be
-  ; able to infer this automatically, without hardcoding a sector
-  ; number
-  mov cl, 0x02
   ; -------------------------------------------
+
+  ; We assume the kernel is near enough to the beginning
+  ; of the drive such that we can hardcode the cylinder (ch)
+  ; and the head (ah) numbers to be zero
+  mov ch, 0x00
+  mov ah, 0x00
+
+  ; The sector to read from. We have a disk offset,
+  ; and we can translate that into a sector number
+  mov cl, ((KERNEL_DISK_ADDRESS / 8) / 512) + 1
 
   ; Execute the read operation. We might continue
   ; from here if there was an error
@@ -154,7 +157,7 @@ PROTECTED_MODE_BEGIN:
   call vga_print_string_ascii
 
   ; Jump to the address where we loaded the kernel
-  call KERNEL_OFFSET
+  call KERNEL_ORIGIN_ADDRESS
 
   jmp $
 
