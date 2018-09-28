@@ -77,10 +77,9 @@ BOOT_LOADER_STACK_SIZE = 0x1400
 # TODO: These are the same, but don't really need to
 KERNEL_ORIGIN_ADDRESS = 0x1000
 KERNEL_DISK_ADDRESS = 0x1000
+
 # 16 sectors should be enough for our kernel
 # This value should be a multiple of 4096 (the sector size)
-# TODO: Write a test script that ensures the kernel
-# doesn't exceed this value
 KERNEL_DISK_SIZE = 65536
 
 out:
@@ -103,9 +102,13 @@ out/kernel.o: src/kernel.c | out
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
 out/kernel.bin: out/kernel.o
-	# TODO: -Ttext seems to be the origin address where the kernel
-	# will be loaded. Exactly the same as [org 0x1000] in NASM
-	# Doesn't seem to be making any difference here
+	# -Ttext <address>:
+	#     Set the address of the text section, which contains the
+	#     execute instructions from the kernel. We set this to the
+	#     address that the boot loader will load the kernel to.
+	#     This option causes all other addresses in the binary to
+	#     be relative to this address, effectively mirroring what
+	#     the NASM [org ADDRESS] directive did on the boot loader
 	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
 		-o $@ -Ttext $(KERNEL_ORIGIN_ADDRESS) $< --oformat binary
 
