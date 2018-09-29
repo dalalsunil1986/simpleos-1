@@ -2,22 +2,9 @@
 # Cross-Compiler
 # ---------------------------------------------------------------------
 
-# Older versions of gcc don't seem to build on clang on macOS
-# See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81037
-HOST_CC ?= gcc-8
-HOST_CXX ?= g++-8
-
 # TODO: Why elf?
 KERNEL_BINARY_FORMAT = elf
-
 CROSS_COMPILER_TARGET = i386-$(KERNEL_BINARY_FORMAT)
-
-# The installation prefix directory for the toolchain
-CROSS_COMPILER_PREFIX = $(shell pwd)/.toolchain
-
-crosscompiler:
-	CC=$(HOST_CC) CXX=$(HOST_CXX) \
-		./scripts/toolchain.sh $(CROSS_COMPILER_TARGET) $(CROSS_COMPILER_PREFIX)
 
 # ---------------------------------------------------------------------
 # Operating System
@@ -100,7 +87,7 @@ out/boot_loader.bin: src/boot/main.asm $(wildcard src/boot/utils/*.asm) | out
 	xxd $@
 
 out/kernel.o: src/kernel/main.c | out
-	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-gcc \
+	$(CROSS_COMPILER_TARGET)-gcc \
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
 # This piece of assembly will be linked at the beginning
@@ -117,7 +104,7 @@ out/kernel.bin: out/kernel_entry.o out/kernel.o
 	#     This option causes all other addresses in the binary to
 	#     be relative to this address, effectively mirroring what
 	#     the NASM [org ADDRESS] directive did on the boot loader
-	$(CROSS_COMPILER_PREFIX)/bin/$(CROSS_COMPILER_TARGET)-ld \
+	$(CROSS_COMPILER_TARGET)-ld \
 		-o $@ -Ttext $(KERNEL_ORIGIN_ADDRESS) $^ --oformat binary
 
 # For debugging purposes

@@ -7,7 +7,7 @@ Dependencies
 ### macOS
 
 ```
-brew install qemu nasm shellcheck gmp mpfr libmpc gcc vera++
+brew install qemu nasm shellcheck vera++ jviotti/homebrew-formulas/i386-elf-gcc
 ```
 
 References
