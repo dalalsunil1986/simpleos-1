@@ -131,7 +131,7 @@ out/image.bin: out/boot_loader.bin out/kernel.bin
 # ---------------------------------------------------------------------
 
 .DEFAULT_GOAL = qemu
-.PHONY: qemu lint test clean distclean crosscompiler
+.PHONY: qemu lint test clean distclean
 
 qemu: out/image.bin
 	# Press Alt-2 and type "quit" to exit
@@ -142,7 +142,7 @@ lint:
 	shellcheck test/*.sh
 	vera++ --show-rule --summary --error $(C_SOURCES) $(C_HEADERS)
 
-test: lint out/boot_loader.bin out/kernel.bin
+test: out/boot_loader.bin out/kernel.bin lint
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 	./test/kernel_size.sh $(word 2,$^) $(KERNEL_DISK_SIZE)
