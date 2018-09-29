@@ -10,6 +10,10 @@ CROSS_COMPILER_TARGET = i386-$(KERNEL_BINARY_FORMAT)
 # Operating System
 # ---------------------------------------------------------------------
 
+C_SOURCES = $(wildcard src/kernel/*.c)
+C_HEADERS = $(wildcard src/kernel/*.h)
+C_OBJECTS = $(patsubst src/kernel/%.c,out/%.o,$(C_SOURCES))
+
 # -ffreestanding
 #     A free-standing environment assumes nothing about typical
 #     built-in C functions. Without it, the compiler might see
@@ -86,7 +90,7 @@ out/boot_loader.bin: src/boot/main.asm $(wildcard src/boot/utils/*.asm) | out
 		$< -o $@
 	xxd $@
 
-out/kernel.o: src/kernel/main.c | out
+out/%.o: src/kernel/%.c $(C_HEADERS)
 	$(CROSS_COMPILER_TARGET)-gcc \
 		$(CROSS_COMPILER_CFLAGS) -c $< -o $@
 
@@ -96,7 +100,7 @@ out/kernel.o: src/kernel/main.c | out
 out/kernel_entry.o: src/kernel/entry.asm
 	nasm $< -f $(KERNEL_BINARY_FORMAT) -o $@
 
-out/kernel.bin: out/kernel_entry.o out/kernel.o
+out/kernel.bin: out/kernel_entry.o $(C_OBJECTS)
 	# -Ttext <address>:
 	#     Set the address of the text section, which contains the
 	#     execute instructions from the kernel. We set this to the
@@ -136,7 +140,7 @@ qemu: out/image.bin
 
 lint:
 	shellcheck test/*.sh
-	vera++ --show-rule --summary --error src/kernel/*.c
+	vera++ --show-rule --summary --error $(C_SOURCES) $(C_HEADERS)
 
 test: lint out/boot_loader.bin out/kernel.bin
 	./test/boot_loader_size.sh $<
