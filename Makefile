@@ -135,7 +135,7 @@ qemu: out/image.bin
 	qemu-system-i386 --curses -drive format=raw,file=$<,index=0,if=floppy
 
 lint:
-	shellcheck scripts/*.sh test/*.sh
+	shellcheck test/*.sh
 	vera++ --show-rule --summary --error src/kernel/*.c
 
 test: lint out/boot_loader.bin out/kernel.bin
