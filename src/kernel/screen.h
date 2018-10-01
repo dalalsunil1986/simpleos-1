@@ -1,5 +1,5 @@
-#ifndef KERNEL_TYPES_H
-#define KERNEL_TYPES_H
+#ifndef KERNEL_SCREEN_H
+#define KERNEL_SCREEN_H
 
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
@@ -27,8 +27,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define NULL 0
-typedef char byte_t;
-typedef unsigned short word_t;
+#include <stdint.h>
+#include "vga.h"
+
+#define WHITE_ON_BLACK 0x0f
+
+int32_t kernel_print_character(const char character,
+                               const int32_t column,
+                               const int32_t row,
+                               const byte_t attributes);
+void kernel_print_at(
+  const char * const message,
+  const int32_t column, const int32_t row,
+  const byte_t attributes);
+void kernel_print(const char * const message, const byte_t attributes);
 
 #endif

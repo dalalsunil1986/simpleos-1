@@ -41,12 +41,12 @@ inline int32_t vga_get_offset(const int32_t column, const int32_t row)
 
 inline int32_t vga_get_row_from_offset(const int32_t offset)
 {
-  return offset / (2 * VGA_COLUMNS);
+  return vga_row(offset / (2 * VGA_COLUMNS));
 }
 
 inline int32_t vga_get_column_from_offset(const int32_t offset)
 {
-  return (offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2;
+  return vga_column((offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2);
 }
 
 inline int32_t vga_column(const int32_t column)
@@ -80,4 +80,19 @@ void vga_offset_write_character(
 {
   VGA_VIDEO_ADDRESS[offset] = character;
   VGA_VIDEO_ADDRESS[offset + 1] = attributes;
+}
+
+int32_t vga_write_character(
+  const char character,
+  const int32_t column, const int32_t row,
+  const byte_t attributes)
+{
+  const int32_t offset = vga_get_offset(column, row);
+  if (character == '\n')
+  {
+    return vga_get_offset(0, vga_get_row_from_offset(offset) + 1);
+  }
+
+  vga_offset_write_character(offset, character, attributes);
+  return offset + 2;
 }

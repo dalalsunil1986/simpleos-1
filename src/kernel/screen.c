@@ -1,6 +1,3 @@
-#ifndef KERNEL_TYPES_H
-#define KERNEL_TYPES_H
-
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
  *
@@ -27,8 +24,57 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define NULL 0
-typedef char byte_t;
-typedef unsigned short word_t;
+#include "screen.h"
 
-#endif
+inline static int32_t __kernel_get_real_column(
+  const int32_t current_offset, const int32_t column)
+{
+  return column > 0 ? column : vga_get_column_from_offset(current_offset);
+}
+
+inline static int32_t __kernel_get_real_row(
+  const int32_t current_offset, const int32_t row)
+{
+  return row > 0 ? row : vga_get_row_from_offset(current_offset);
+}
+
+int32_t kernel_print_character(
+  const char character,
+  const int32_t column, const int32_t row,
+  const byte_t attributes)
+{
+  const int32_t current_offset = vga_cursor_get_offset();
+  const int32_t offset = vga_write_character(
+    character,
+    __kernel_get_real_column(current_offset, column),
+    __kernel_get_real_row(current_offset, row),
+    attributes);
+  vga_cursor_set_offset(offset);
+  return offset;
+}
+
+void kernel_print_at(
+  const char * const message,
+  const int32_t column, const int32_t row,
+  const byte_t attributes)
+{
+  const int32_t current_offset = vga_cursor_get_offset();
+  int32_t offset = vga_get_offset(
+    __kernel_get_real_column(current_offset, column),
+    __kernel_get_real_row(current_offset, row));
+  int32_t index = 0;
+  while (message[index] != NULL)
+  {
+    offset = kernel_print_character(
+      message[index],
+      vga_get_column_from_offset(offset),
+      vga_get_row_from_offset(offset),
+      attributes);
+    index++;
+  }
+}
+
+void kernel_print(const char * const message, const byte_t attributes)
+{
+  kernel_print_at(message, 0, 0, attributes);
+}

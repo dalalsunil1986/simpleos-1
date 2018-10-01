@@ -41,4 +41,9 @@ void vga_cursor_set_offset(const int32_t offset);
 void vga_offset_write_character(
     const int32_t offset, const char character, const byte_t attributes);
 
+int32_t vga_write_character(
+  const char character,
+  const int32_t column, const int32_t row,
+  const byte_t attributes);
+
 #endif
