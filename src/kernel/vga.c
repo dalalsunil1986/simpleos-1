@@ -28,6 +28,7 @@
 
 static const int16_t VGA_ROWS = 25;
 static const int16_t VGA_COLUMNS = 80;
+static byte_t * const VGA_VIDEO_ADDRESS = (byte_t *) 0xb8000;
 
 // Screen device I/O ports
 static const port_t REGISTRY_SCREEN_CTRL = 0x3D4;
@@ -72,4 +73,10 @@ void vga_cursor_set_offset(const int32_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) >> 8));
   port_byte_out(REGISTRY_SCREEN_CTRL, 15);
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
+}
+
+void vga_write_character(const int32_t offset, const char character, byte_t attributes)
+{
+  VGA_VIDEO_ADDRESS[offset] = character;
+  VGA_VIDEO_ADDRESS[offset + 1] = attributes;
 }
