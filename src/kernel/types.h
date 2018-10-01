@@ -1,3 +1,6 @@
+#ifndef KERNEL_TYPES_H
+#define KERNEL_TYPES_H
+
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
  *
@@ -24,11 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "port.h"
+typedef unsigned char byte_t;
+typedef unsigned short word_t;
 
-void main()
-{
-  char * video_memory = (char *) 0xb8000;
-  *video_memory = 'X';
-  *(video_memory + 2) = 'Y';
-}
+#endif

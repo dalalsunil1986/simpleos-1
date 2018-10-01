@@ -39,3 +39,4 @@ References
 - https://gcc.gnu.org/install/configure.html
 - https://wiki.osdev.org/GCC_Cross-Compiler
 - https://www.nasm.us/doc/nasmdoc6.html
+- https://en.wikibooks.org/wiki/X86_Assembly/GAS_Syntax

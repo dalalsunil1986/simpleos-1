@@ -26,9 +26,35 @@
 
 #include "port.h"
 
-void main()
+byte_t port_byte_in(const port_t port)
 {
-  char * video_memory = (char *) 0xb8000;
-  *video_memory = 'X';
-  *(video_memory + 2) = 'Y';
+  byte_t result;
+
+  // This is GCC's inline assembly extension, which uses GAS assembly
+  // See: https://en.wikibooks.org/wiki/X86_Assembly/GAS_Syntax
+  // The instruction that we want for this ask is "in <port>, <destination>".
+  // In GAS, % is used to denote registers, but notice we have to escape % in C.
+  //
+  // "=a" (result): put the "al" register in variable "result"
+  // "d" (port): load "dx" with "port"
+  __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
+
+  return result;
+}
+
+void port_byte_out(const port_t port, const byte_t value)
+{
+  __asm__("out %%al, %%dx" : : "a" (value), "d" (port));
+}
+
+word_t port_word_in(const port_t port)
+{
+  word_t result;
+  __asm__("in %%dx, %%ax" : "=a" (result) : "d" (port));
+  return result;
+}
+
+void port_word_out(const port_t port, const word_t value)
+{
+  __asm__("out %%ax, %%dx" : : "a" (value), "d" (port));
 }

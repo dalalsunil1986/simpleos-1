@@ -1,3 +1,6 @@
+#ifndef KERNEL_PORT_H
+#define KERNEL_PORT_H
+
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
  *
@@ -24,11 +27,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "port.h"
+#include "types.h"
 
-void main()
-{
-  char * video_memory = (char *) 0xb8000;
-  *video_memory = 'X';
-  *(video_memory + 2) = 'Y';
-}
+/**
+ * A set of utilities to interact with I/O addresses
+ * mapped to device controller registers.
+ */
+
+// A port is an address in the x86 I/O bus that we
+// can use to interact with devices.
+typedef word_t port_t;
+
+/**
+ * Read a byte from a port
+ */
+byte_t port_byte_in(const port_t port);
+
+/**
+ * Write a byte to a port
+ */
+void port_byte_out(const port_t port, const byte_t value);
+
+/**
+ * Read a word from a port
+ */
+word_t port_word_in(const port_t port);
+
+/**
+ * Write a word to a port
+ */
+void port_word_out(const port_t port, const word_t value);
+
+#endif
