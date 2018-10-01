@@ -28,11 +28,15 @@
  */
 
 #include <stdint.h>
+#include "port.h"
+#include "types.h"
 
 inline int32_t vga_get_offset(const int32_t column, const int32_t row);
 inline int32_t vga_get_row_from_offset(const int32_t offset);
 inline int32_t vga_get_column_from_offset(const int32_t offset);
 inline int32_t vga_column(const int32_t column);
 inline int32_t vga_row(const int32_t row);
+int32_t vga_cursor_get_offset();
+void vga_cursor_set_offset(const int32_t offset);
 
 #endif

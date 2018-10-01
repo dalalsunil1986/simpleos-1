@@ -29,6 +29,10 @@
 static const int16_t VGA_ROWS = 25;
 static const int16_t VGA_COLUMNS = 80;
 
+// Screen device I/O ports
+static const port_t REGISTRY_SCREEN_CTRL = 0x3D4;
+static const port_t REGISTRY_SCREEN_DATA = 0x3D5;
+
 inline int32_t vga_get_offset(const int32_t column, const int32_t row)
 {
   return 2 * ((row * VGA_COLUMNS) + column);
@@ -52,4 +56,20 @@ inline int32_t vga_column(const int32_t column)
 inline int32_t vga_row(const int32_t row)
 {
   return row > VGA_ROWS ? VGA_ROWS : row;
+}
+
+int32_t vga_cursor_get_offset()
+{
+  port_byte_out(REGISTRY_SCREEN_CTRL, 14);
+  const int32_t offset = port_byte_in(REGISTRY_SCREEN_DATA) << 8;
+  port_byte_out(REGISTRY_SCREEN_CTRL, 15);
+  return (offset + port_byte_in(REGISTRY_SCREEN_DATA)) * 2;
+}
+
+void vga_cursor_set_offset(const int32_t offset)
+{
+  port_byte_out(REGISTRY_SCREEN_CTRL, 14);
+  port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) >> 8));
+  port_byte_out(REGISTRY_SCREEN_CTRL, 15);
+  port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
 }
