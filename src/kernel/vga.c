@@ -43,3 +43,13 @@ inline int32_t vga_get_column_from_offset(const int32_t offset)
 {
   return (offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2;
 }
+
+inline int32_t vga_column(const int32_t column)
+{
+  return column > VGA_COLUMNS ? VGA_COLUMNS : column;
+}
+
+inline int32_t vga_row(const int32_t row)
+{
+  return row > VGA_ROWS ? VGA_ROWS : row;
+}

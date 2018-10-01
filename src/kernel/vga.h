@@ -32,5 +32,7 @@
 inline int32_t vga_get_offset(const int32_t column, const int32_t row);
 inline int32_t vga_get_row_from_offset(const int32_t offset);
 inline int32_t vga_get_column_from_offset(const int32_t offset);
+inline int32_t vga_column(const int32_t column);
+inline int32_t vga_row(const int32_t row);
 
 #endif
