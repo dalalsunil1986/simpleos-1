@@ -36,7 +36,7 @@ static const port_t REGISTRY_SCREEN_DATA = 0x3D5;
 
 inline int32_t vga_get_offset(const int32_t column, const int32_t row)
 {
-  return 2 * ((row * VGA_COLUMNS) + column);
+  return 2 * ((vga_row(row) * VGA_COLUMNS) + vga_column(column));
 }
 
 inline int32_t vga_get_row_from_offset(const int32_t offset)
