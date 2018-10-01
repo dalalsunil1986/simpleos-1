@@ -38,6 +38,6 @@ inline int32_t vga_column(const int32_t column);
 inline int32_t vga_row(const int32_t row);
 int32_t vga_cursor_get_offset();
 void vga_cursor_set_offset(const int32_t offset);
-void vga_write_character(const int32_t offset, const char character, byte_t attributes);
+void vga_offset_write_character(const int32_t offset, const char character, byte_t attributes);
 
 #endif
