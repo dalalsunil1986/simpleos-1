@@ -24,14 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "port.h"
 #include "screen.h"
 
 void main()
 {
-  char * video_memory = (char *) 0xb8000;
-  *video_memory = 'X';
-  *(video_memory + 2) = 'Y';
-
   kernel_print("Hello World from kernel\n", WHITE_ON_BLACK);
 }
