@@ -75,7 +75,8 @@ void vga_cursor_set_offset(const int32_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
 }
 
-void vga_offset_write_character(const int32_t offset, const char character, byte_t attributes)
+void vga_offset_write_character(
+    const int32_t offset, const char character, const byte_t attributes)
 {
   VGA_VIDEO_ADDRESS[offset] = character;
   VGA_VIDEO_ADDRESS[offset + 1] = attributes;
