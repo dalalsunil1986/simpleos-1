@@ -25,7 +25,6 @@
  */
 
 #include "screen.h"
-#include "vga.h"
 
 void main()
 {

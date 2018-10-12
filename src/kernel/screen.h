@@ -1,5 +1,5 @@
-#ifndef SCREEN_SCREEN_H
-#define SCREEN_SCREEN_H
+#ifndef KERNEL_SCREEN_H
+#define KERNEL_SCREEN_H
 
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
