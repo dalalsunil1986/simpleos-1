@@ -32,7 +32,8 @@ void memory_copy(
     const int32_t bytes)
 {
   int32_t index;
-  for (index = 0; index < bytes; index++) {
+  for (index = 0; index < bytes; index++)
+  {
     *(destination + index) = *(source + index);
   }
 }
