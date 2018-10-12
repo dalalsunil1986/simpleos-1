@@ -29,5 +29,5 @@
 
 void main()
 {
-  kernel_print("Hello World from kernel\n", VGA_ATTRIBUTE_WHITE_ON_BLUE);
+  screen_print("Hello World from kernel\n", VGA_ATTRIBUTE_WHITE_ON_BLUE);
 }

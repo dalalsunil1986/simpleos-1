@@ -1,5 +1,5 @@
-#ifndef KERNEL_SCREEN_H
-#define KERNEL_SCREEN_H
+#ifndef SCREEN_SCREEN_H
+#define SCREEN_SCREEN_H
 
 /* Copyright (c) 2018, Juan Cruz Viotti
  * All rights reserved.
@@ -32,14 +32,14 @@
 
 typedef vga_position_t screen_position_t;
 
-void kernel_print_character(const char character,
+void screen_print_character(const char character,
                                const screen_position_t column,
                                const screen_position_t row,
                                const byte_t attributes);
-void kernel_print_at(
+void screen_print_at(
   const char * const message,
   const screen_position_t column, const screen_position_t row,
   const byte_t attributes);
-void kernel_print(const char * const message, const byte_t attributes);
+void screen_print(const char * const message, const byte_t attributes);
 
 #endif
