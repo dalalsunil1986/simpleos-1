@@ -25,8 +25,9 @@
  */
 
 #include "screen.h"
+#include "vga.h"
 
 void main()
 {
-  kernel_print("Hello World from kernel\n", WHITE_ON_BLACK);
+  kernel_print("Hello World from kernel\n", VGA_ATTRIBUTE_WHITE_ON_BLUE);
 }

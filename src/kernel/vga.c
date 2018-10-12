@@ -26,48 +26,24 @@
 
 #include "vga.h"
 
-static const int16_t VGA_ROWS = 25;
-static const int16_t VGA_COLUMNS = 80;
-static byte_t * const VGA_VIDEO_ADDRESS = (byte_t *) 0xb8000;
+static const vga_position_t VGA_ROWS = 25;
+static const vga_position_t VGA_COLUMNS = 80;
 
 // Screen device I/O ports
 static const port_t REGISTRY_SCREEN_CTRL = 0x3D4;
 static const port_t REGISTRY_SCREEN_DATA = 0x3D5;
 
-inline int32_t vga_get_offset(const int32_t column, const int32_t row)
-{
-  return 2 * ((vga_row(row) * VGA_COLUMNS) + vga_column(column));
-}
-
-inline int32_t vga_get_row_from_offset(const int32_t offset)
-{
-  return vga_row(offset / (2 * VGA_COLUMNS));
-}
-
-inline int32_t vga_get_column_from_offset(const int32_t offset)
-{
-  return vga_column((offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2);
-}
-
-inline int32_t vga_column(const int32_t column)
-{
-  return column > VGA_COLUMNS ? VGA_COLUMNS : column;
-}
-
-inline int32_t vga_row(const int32_t row)
-{
-  return row > VGA_ROWS ? VGA_ROWS : row;
-}
-
-int32_t vga_cursor_get_offset()
+// Impure
+vga_offset_t vga_cursor_get_offset()
 {
   port_byte_out(REGISTRY_SCREEN_CTRL, 14);
-  const int32_t offset = port_byte_in(REGISTRY_SCREEN_DATA) << 8;
+  const vga_offset_t offset = port_byte_in(REGISTRY_SCREEN_DATA) << 8;
   port_byte_out(REGISTRY_SCREEN_CTRL, 15);
   return (offset + port_byte_in(REGISTRY_SCREEN_DATA)) * 2;
 }
 
-void vga_cursor_set_offset(const int32_t offset)
+// Impure
+void vga_cursor_set_offset(const vga_offset_t offset)
 {
   port_byte_out(REGISTRY_SCREEN_CTRL, 14);
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) >> 8));
@@ -75,24 +51,53 @@ void vga_cursor_set_offset(const int32_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
 }
 
-void vga_offset_write_character(
-    const int32_t offset, const char character, const byte_t attributes)
+inline vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row)
 {
-  VGA_VIDEO_ADDRESS[offset] = character;
-  VGA_VIDEO_ADDRESS[offset + 1] = attributes;
+  return 2 * ((vga_row(row) * VGA_COLUMNS) + vga_column(column));
 }
 
-int32_t vga_write_character(
+inline vga_position_t vga_get_row_from_offset(const vga_offset_t offset)
+{
+  return vga_row(offset / (2 * VGA_COLUMNS));
+}
+
+inline vga_position_t vga_get_column_from_offset(const vga_offset_t offset)
+{
+  return vga_column((offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2);
+}
+
+inline vga_position_t vga_column(const vga_position_t column)
+{
+  return column > VGA_COLUMNS ? VGA_COLUMNS : column;
+}
+
+inline vga_position_t vga_row(const vga_position_t row)
+{
+  return row > VGA_ROWS ? VGA_ROWS : row;
+}
+
+void vga_offset_write_character(
+    byte_t * const address,
+    const vga_offset_t offset,
+    const char character,
+    const byte_t attributes)
+{
+  address[offset] = character;
+  address[offset + 1] = attributes;
+}
+
+vga_offset_t vga_write_character(
+  byte_t * const address,
   const char character,
-  const int32_t column, const int32_t row,
+  const vga_position_t column, const vga_position_t row,
   const byte_t attributes)
 {
-  const int32_t offset = vga_get_offset(column, row);
+  const vga_offset_t offset = vga_get_offset(column, row);
   if (character == '\n')
   {
     return vga_get_offset(0, vga_get_row_from_offset(offset) + 1);
   }
 
-  vga_offset_write_character(offset, character, attributes);
+  vga_offset_write_character(address, offset, character, attributes);
   return offset + 2;
 }

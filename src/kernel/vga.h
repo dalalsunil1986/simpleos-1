@@ -31,19 +31,31 @@
 #include "port.h"
 #include "types.h"
 
-inline int32_t vga_get_offset(const int32_t column, const int32_t row);
-inline int32_t vga_get_row_from_offset(const int32_t offset);
-inline int32_t vga_get_column_from_offset(const int32_t offset);
-inline int32_t vga_column(const int32_t column);
-inline int32_t vga_row(const int32_t row);
-int32_t vga_cursor_get_offset();
-void vga_cursor_set_offset(const int32_t offset);
-void vga_offset_write_character(
-    const int32_t offset, const char character, const byte_t attributes);
+#define VGA_ATTRIBUTE_WHITE_ON_BLACK 0x0f
+#define VGA_ATTRIBUTE_WHITE_ON_BLUE 0x1f
+#define VGA_VIDEO_ADDRESS 0xb8000
 
-int32_t vga_write_character(
+typedef int32_t vga_offset_t;
+typedef int32_t vga_position_t;
+
+inline vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row);
+inline vga_position_t vga_get_row_from_offset(const vga_offset_t offset);
+inline vga_position_t vga_get_column_from_offset(const vga_offset_t offset);
+inline vga_position_t vga_column(const vga_position_t column);
+inline vga_position_t vga_row(const vga_position_t row);
+vga_offset_t vga_cursor_get_offset();
+void vga_cursor_set_offset(const vga_offset_t offset);
+void vga_offset_write_character(
+    byte_t * const address,
+    const vga_offset_t offset,
+    const char character,
+    const byte_t attributes);
+
+vga_offset_t vga_write_character(
+  byte_t * const address,
   const char character,
-  const int32_t column, const int32_t row,
+  const vga_position_t column,
+  const vga_position_t row,
   const byte_t attributes);
 
 #endif

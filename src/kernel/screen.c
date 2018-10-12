@@ -26,25 +26,26 @@
 
 #include "screen.h"
 
-inline static int32_t __kernel_get_real_column(
-  const int32_t current_offset, const int32_t column)
+inline static vga_position_t __kernel_get_real_column(
+  const vga_offset_t current_offset, const vga_position_t column)
 {
   return column > 0 ? column : vga_get_column_from_offset(current_offset);
 }
 
-inline static int32_t __kernel_get_real_row(
-  const int32_t current_offset, const int32_t row)
+inline static vga_position_t __kernel_get_real_row(
+  const vga_offset_t current_offset, const vga_position_t row)
 {
   return row > 0 ? row : vga_get_row_from_offset(current_offset);
 }
 
-int32_t kernel_print_character(
+static vga_offset_t __kernel_print_character(
   const char character,
-  const int32_t column, const int32_t row,
+  const screen_position_t column, const screen_position_t row,
   const byte_t attributes)
 {
-  const int32_t current_offset = vga_cursor_get_offset();
-  const int32_t offset = vga_write_character(
+  const vga_offset_t current_offset = vga_cursor_get_offset();
+  const vga_offset_t offset = vga_write_character(
+    (byte_t *) VGA_VIDEO_ADDRESS,
     character,
     __kernel_get_real_column(current_offset, column),
     __kernel_get_real_row(current_offset, row),
@@ -53,19 +54,27 @@ int32_t kernel_print_character(
   return offset;
 }
 
-void kernel_print_at(
-  const char * const message,
-  const int32_t column, const int32_t row,
+void kernel_print_character(
+  const char character,
+  const screen_position_t column, const screen_position_t row,
   const byte_t attributes)
 {
-  const int32_t current_offset = vga_cursor_get_offset();
-  int32_t offset = vga_get_offset(
+  __kernel_print_character(character, column, row, attributes);
+}
+
+void kernel_print_at(
+  const char * const message,
+  const screen_position_t column, const screen_position_t row,
+  const byte_t attributes)
+{
+  const vga_offset_t current_offset = vga_cursor_get_offset();
+  vga_offset_t offset = vga_get_offset(
     __kernel_get_real_column(current_offset, column),
     __kernel_get_real_row(current_offset, row));
   int32_t index = 0;
   while (message[index] != NULL)
   {
-    offset = kernel_print_character(
+    offset = __kernel_print_character(
       message[index],
       vga_get_column_from_offset(offset),
       vga_get_row_from_offset(offset),

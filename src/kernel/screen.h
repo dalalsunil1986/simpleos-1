@@ -30,15 +30,15 @@
 #include <stdint.h>
 #include "vga.h"
 
-#define WHITE_ON_BLACK 0x0f
+typedef vga_position_t screen_position_t;
 
-int32_t kernel_print_character(const char character,
-                               const int32_t column,
-                               const int32_t row,
+void kernel_print_character(const char character,
+                               const screen_position_t column,
+                               const screen_position_t row,
                                const byte_t attributes);
 void kernel_print_at(
   const char * const message,
-  const int32_t column, const int32_t row,
+  const screen_position_t column, const screen_position_t row,
   const byte_t attributes);
 void kernel_print(const char * const message, const byte_t attributes);
 
