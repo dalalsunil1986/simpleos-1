@@ -56,4 +56,6 @@ vga_offset_t vga_write_character(
   const vga_position_t row,
   const byte_t attributes);
 
+void vga_fill(byte_t * const address, const char character, const byte_t attributes);
+
 #endif

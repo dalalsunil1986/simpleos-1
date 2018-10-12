@@ -101,3 +101,15 @@ vga_offset_t vga_write_character(
   vga_offset_write_character(address, offset, character, attributes);
   return offset + 2;
 }
+
+void vga_fill(byte_t * const address, const char character, const byte_t attributes)
+{
+  vga_position_t row;
+  vga_position_t column;
+
+  for (row = 0; row < VGA_ROWS; row++) {
+    for (column = 0; column < VGA_COLUMNS; column++) {
+      vga_write_character(address, character, column, row, attributes);
+    }
+  }
+}

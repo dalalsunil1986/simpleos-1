@@ -28,5 +28,6 @@
 
 void main()
 {
+  screen_clear();
   screen_print("Hello World from kernel\n", ATTRIBUTE_WHITE_ON_BLUE);
 }

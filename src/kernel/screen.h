@@ -43,5 +43,6 @@ void screen_print_at(
   const screen_position_t column, const screen_position_t row,
   const byte_t attributes);
 void screen_print(const char * const message, const byte_t attributes);
+void screen_clear();
 
 #endif
