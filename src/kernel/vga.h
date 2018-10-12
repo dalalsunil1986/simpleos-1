@@ -31,8 +31,6 @@
 #include "port.h"
 #include "types.h"
 
-#define VGA_ATTRIBUTE_WHITE_ON_BLACK 0x0f
-#define VGA_ATTRIBUTE_WHITE_ON_BLUE 0x1f
 #define VGA_VIDEO_ADDRESS 0xb8000
 
 typedef int32_t vga_offset_t;

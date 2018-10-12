@@ -30,6 +30,8 @@
 #include <stdint.h>
 #include "vga.h"
 
+#define ATTRIBUTE_WHITE_ON_BLACK 0x0f
+#define ATTRIBUTE_WHITE_ON_BLUE 0x1f
 typedef vga_position_t screen_position_t;
 
 void screen_print_character(const char character,
