@@ -134,7 +134,7 @@ out/test: | out
 out/test/kernel: | out/test
 	mkdir $@
 
-out/test/kernel/%: test/kernel/%.c $(C_OBJECTS) | out/test/kernel
+out/test/kernel/%: test/kernel/%.c $(filter-out src/kernel/main.c,$(C_SOURCES)) | out/test/kernel
 	$(CC) -o $@ $^ deps/unity/src/unity.c -Ideps/unity/src -I.
 
 # ---------------------------------------------------------------------

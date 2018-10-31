@@ -51,27 +51,27 @@ void vga_cursor_set_offset(const vga_offset_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
 }
 
-inline vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row)
+vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row)
 {
   return 2 * ((vga_row(row) * VGA_COLUMNS) + vga_column(column));
 }
 
-inline vga_position_t vga_get_row_from_offset(const vga_offset_t offset)
+vga_position_t vga_get_row_from_offset(const vga_offset_t offset)
 {
   return vga_row(offset / (2 * VGA_COLUMNS));
 }
 
-inline vga_position_t vga_get_column_from_offset(const vga_offset_t offset)
+vga_position_t vga_get_column_from_offset(const vga_offset_t offset)
 {
   return vga_column((offset - (vga_get_row_from_offset(offset) * 2 * VGA_COLUMNS)) / 2);
 }
 
-inline vga_position_t vga_column(const vga_position_t column)
+vga_position_t vga_column(const vga_position_t column)
 {
   return column > VGA_COLUMNS ? VGA_COLUMNS : column;
 }
 
-inline vga_position_t vga_row(const vga_position_t row)
+vga_position_t vga_row(const vga_position_t row)
 {
   return row > VGA_ROWS ? VGA_ROWS : row;
 }

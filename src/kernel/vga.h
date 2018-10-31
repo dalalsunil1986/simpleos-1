@@ -36,11 +36,11 @@
 typedef int32_t vga_offset_t;
 typedef int32_t vga_position_t;
 
-inline vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row);
-inline vga_position_t vga_get_row_from_offset(const vga_offset_t offset);
-inline vga_position_t vga_get_column_from_offset(const vga_offset_t offset);
-inline vga_position_t vga_column(const vga_position_t column);
-inline vga_position_t vga_row(const vga_position_t row);
+vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row);
+vga_position_t vga_get_row_from_offset(const vga_offset_t offset);
+vga_position_t vga_get_column_from_offset(const vga_offset_t offset);
+vga_position_t vga_column(const vga_position_t column);
+vga_position_t vga_row(const vga_position_t row);
 vga_offset_t vga_cursor_get_offset();
 void vga_cursor_set_offset(const vga_offset_t offset);
 void vga_offset_write_character(
