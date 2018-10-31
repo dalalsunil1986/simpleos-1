@@ -26,6 +26,8 @@
 
 #include "vga.h"
 
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
 static const vga_position_t VGA_ROWS = 25;
 static const vga_position_t VGA_COLUMNS = 80;
 
@@ -68,12 +70,22 @@ vga_position_t vga_get_column_from_offset(const vga_offset_t offset)
 
 vga_position_t vga_column(const vga_position_t column)
 {
-  return column >= VGA_COLUMNS ? VGA_COLUMNS - 1 : column;
+  if (column >= VGA_COLUMNS)
+  {
+    return VGA_COLUMNS - 1;
+  }
+
+  return MAX(column, 0);
 }
 
 vga_position_t vga_row(const vga_position_t row)
 {
-  return row >= VGA_ROWS ? VGA_ROWS - 1 : row;
+  if (row >= VGA_ROWS)
+  {
+    return VGA_ROWS - 1;
+  }
+
+  return MAX(row, 0);
 }
 
 void vga_offset_write_character(

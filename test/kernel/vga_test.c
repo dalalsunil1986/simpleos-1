@@ -27,6 +27,12 @@
 #include <unity.h>
 #include "src/kernel/vga.h"
 
+void test_vga_get_offset_minus_1_minus_1()
+{
+  const vga_offset_t offset = vga_get_offset(-1, -1);
+  TEST_ASSERT_EQUAL_HEX32(0, offset);
+}
+
 void test_vga_get_offset_0_0()
 {
   const vga_offset_t offset = vga_get_offset(0, 0);
@@ -66,14 +72,37 @@ void test_vga_get_offset_column_79_eq_80_eq_81()
   TEST_ASSERT_EQUAL_HEX32(offset2, offset3);
 }
 
+void test_vga_get_offset_last_column_next_row_next_offset()
+{
+  const vga_offset_t offset1 = vga_get_offset(80, 0);
+  const vga_offset_t offset2 = vga_get_offset(0, 1);
+  TEST_ASSERT_EQUAL_HEX32(2, offset2 - offset1);
+}
+
+void test_vga_get_offset_inverse()
+{
+  for (vga_position_t column = 0; column < 80; column++)
+  {
+    for (vga_position_t row = 0; row < 25; row++)
+    {
+      const vga_offset_t offset = vga_get_offset(column, row);
+      TEST_ASSERT_EQUAL_HEX32(vga_get_column_from_offset(offset), column);
+      TEST_ASSERT_EQUAL_HEX32(vga_get_row_from_offset(offset), row);
+    }
+  }
+}
+
 int main()
 {
   UNITY_BEGIN();
+  RUN_TEST(test_vga_get_offset_minus_1_minus_1);
   RUN_TEST(test_vga_get_offset_0_0);
   RUN_TEST(test_vga_get_offset_1_0);
   RUN_TEST(test_vga_get_offset_2_0);
   RUN_TEST(test_vga_get_offset_3_0);
   RUN_TEST(test_vga_get_offset_79_0);
   RUN_TEST(test_vga_get_offset_column_79_eq_80_eq_81);
+  RUN_TEST(test_vga_get_offset_last_column_next_row_next_offset);
+  RUN_TEST(test_vga_get_offset_inverse);
   return UNITY_END();
 }
