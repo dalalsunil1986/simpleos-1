@@ -53,6 +53,23 @@ void vga_cursor_set_offset(const vga_offset_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t) ((offset / 2) & 0xff));
 }
 
+void vga_scroll(byte_t * const address)
+{
+  vga_position_t row;
+
+  // We start at one as we don't want to copy the first row
+  // into a memory region that is outside the control of VGA
+  for (row = 1; row < VGA_ROWS; row++)
+  {
+    // Copy this line to the above line
+    memory_copy(address + vga_get_offset(0, row),
+                address + vga_get_offset(0, row - 1),
+
+                // Because each column takes two bytes
+                VGA_COLUMNS * 2);
+  }
+}
+
 vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row)
 {
   return 2 * ((vga_row(row) * VGA_COLUMNS) + vga_column(column));

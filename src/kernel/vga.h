@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include "port.h"
 #include "types.h"
+#include "memory.h"
 
 #define VGA_VIDEO_ADDRESS 0xb8000
 
@@ -57,5 +58,6 @@ vga_offset_t vga_write_character(
   const byte_t attributes);
 
 void vga_fill(byte_t * const address, const char character, const byte_t attributes);
+void vga_scroll(byte_t * const address);
 
 #endif

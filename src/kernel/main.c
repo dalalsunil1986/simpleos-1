@@ -33,4 +33,5 @@ void main()
   screen_print("Bar\n", ATTRIBUTE_WHITE_ON_BLUE);
   screen_print("Baz\n", ATTRIBUTE_WHITE_ON_BLUE);
   screen_print("Qux\n", ATTRIBUTE_WHITE_ON_BLUE);
+  screen_scroll();
 }
