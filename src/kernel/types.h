@@ -27,7 +27,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef NULL
 #define NULL 0
+#endif
+
 typedef char byte_t;
 typedef unsigned short word_t;
 

@@ -13,6 +13,7 @@ CROSS_COMPILER_TARGET = i386-$(KERNEL_BINARY_FORMAT)
 C_SOURCES = $(wildcard src/kernel/*.c)
 C_HEADERS = $(wildcard src/kernel/*.h)
 C_OBJECTS = $(patsubst src/kernel/%.c,out/%.o,$(C_SOURCES))
+C_TESTS = $(patsubst test/kernel/%.c,out/test/kernel/%,$(wildcard test/kernel/*.c))
 
 # -ffreestanding
 #     A free-standing environment assumes nothing about typical
@@ -126,6 +127,15 @@ out/kernel.asm: out/kernel.bin
 out/image.bin: out/boot_loader.bin out/kernel.bin
 	cat $^ > $@
 
+out/test: | out
+	mkdir $@
+
+out/test/kernel: | out/test
+	mkdir $@
+
+out/test/kernel/%: test/kernel/%.c $(C_OBJECTS) | out/test/kernel
+	$(CC) -o $@ $^ deps/unity/src/unity.c -Ideps/unity/src -I.
+
 # ---------------------------------------------------------------------
 # Phony Targets
 # ---------------------------------------------------------------------
@@ -142,10 +152,11 @@ lint:
 	shellcheck test/*.sh
 	vera++ --show-rule --summary --error $(C_SOURCES) $(C_HEADERS)
 
-test: out/boot_loader.bin out/kernel.bin lint
+test: out/boot_loader.bin out/kernel.bin lint $(C_TESTS)
 	./test/boot_loader_size.sh $<
 	./test/boot_loader_signature.sh $<
 	./test/kernel_size.sh $(word 2,$^) $(KERNEL_DISK_SIZE)
+	$(foreach test,$(C_TESTS),$(test);)
 
 clean:
 	rm -rf out
