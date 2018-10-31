@@ -31,7 +31,7 @@
 #define NULL 0
 #endif
 
-typedef char byte_t;
+typedef unsigned char byte_t;
 typedef unsigned short word_t;
 
 #endif

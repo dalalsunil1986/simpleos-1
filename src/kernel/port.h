@@ -41,12 +41,12 @@ typedef word_t port_t;
 /**
  * Read a byte from a port
  */
-unsigned char port_byte_in(const port_t port);
+byte_t port_byte_in(const port_t port);
 
 /**
  * Write a byte to a port
  */
-void port_byte_out(const port_t port, const unsigned char value);
+void port_byte_out(const port_t port, const byte_t value);
 
 /**
  * Read a word from a port
