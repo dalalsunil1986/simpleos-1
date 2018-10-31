@@ -44,6 +44,5 @@ void screen_print_at(
   const byte_t attributes);
 void screen_print(const char * const message, const byte_t attributes);
 void screen_clear();
-void screen_scroll();
 
 #endif

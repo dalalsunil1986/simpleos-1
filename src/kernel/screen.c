@@ -48,7 +48,8 @@ static vga_offset_t __screen_print_character(
     character,
     column,
     row,
-    attributes);
+    attributes,
+    ATTRIBUTE_WHITE_ON_BLACK);
   vga_cursor_set_offset(offset);
   return offset;
 }
@@ -90,16 +91,6 @@ void screen_print(const char * const message, const byte_t attributes)
 void screen_clear()
 {
   byte_t * const address = (byte_t * const) VGA_VIDEO_ADDRESS;
-  vga_fill(address, ' ', ATTRIBUTE_WHITE_ON_BLACK);
+  vga_fill(address, 'X', ATTRIBUTE_WHITE_ON_BLACK);
   vga_cursor_set_offset(vga_get_offset(0, 0));
-}
-
-void screen_scroll()
-{
-  byte_t * const address = (byte_t * const) VGA_VIDEO_ADDRESS;
-  vga_scroll(address);
-  const vga_offset_t current_offset = vga_cursor_get_offset();
-  const vga_position_t current_column = vga_get_column_from_offset(current_offset);
-  const vga_position_t current_row = vga_get_row_from_offset(current_offset);
-  vga_cursor_set_offset(vga_get_offset(current_column, current_row - 1));
 }

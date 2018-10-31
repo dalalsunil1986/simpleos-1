@@ -53,7 +53,7 @@ void vga_cursor_set_offset(const vga_offset_t offset)
   port_byte_out(REGISTRY_SCREEN_DATA, (byte_t) ((offset / 2) & 0xff));
 }
 
-void vga_scroll(byte_t * const address)
+void vga_scroll(byte_t * const address, const byte_t attributes)
 {
   vga_position_t row;
 
@@ -67,6 +67,13 @@ void vga_scroll(byte_t * const address)
 
                 // Because each column takes two bytes
                 VGA_COLUMNS * 2);
+  }
+
+  vga_position_t column;
+  for (column = 0; column < VGA_COLUMNS; column++)
+  {
+    const vga_offset_t offset = vga_get_offset(column, VGA_ROWS - 1);
+    vga_offset_write_character(address, offset, ' ', attributes);
   }
 }
 
@@ -119,12 +126,19 @@ vga_offset_t vga_write_character(
   byte_t * const address,
   const char character,
   const vga_position_t column, const vga_position_t row,
-  const byte_t attributes)
+  const byte_t attributes,
+  const byte_t scroll_attributes)
 {
   const vga_offset_t offset = vga_get_offset(column, row);
   if (character == '\n')
   {
-    return vga_get_offset(0, row + 1);
+    const vga_position_t next_row = row + 1;
+    if (next_row == VGA_ROWS) {
+      vga_scroll(address, scroll_attributes);
+      return vga_get_offset(0, row);
+    }
+
+    return vga_get_offset(0, next_row);
   }
 
   vga_offset_write_character(address, offset, character, attributes);
