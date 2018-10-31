@@ -67,18 +67,18 @@ void screen_print_at(
   const byte_t attributes)
 {
   const vga_offset_t current_offset = vga_cursor_get_offset();
-  vga_offset_t offset = vga_get_offset(
-    __screen_get_real_column(current_offset, column),
-    __screen_get_real_row(current_offset, row));
-  int32_t index = 0;
-  while (message[index] != NULL)
-  {
-    offset = __screen_print_character(
+  vga_position_t next_column = __screen_get_real_column(current_offset, column);
+  vga_position_t next_row = __screen_get_real_row(current_offset, row);
+
+  int32_t index;
+  for (index = 0; message[index] != NULL; index++) {
+    const vga_offset_t offset = __screen_print_character(
       message[index],
-      vga_get_column_from_offset(offset),
-      vga_get_row_from_offset(offset),
+      next_column,
+      next_row,
       attributes);
-    index++;
+    next_column = vga_get_column_from_offset(offset);
+    next_row = vga_get_row_from_offset(offset);
   }
 }
 
