@@ -29,8 +29,8 @@
 void main()
 {
   screen_clear();
-  screen_print_at("Foo\n", -1, -1, ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print_at("Bar\n", -1, -1, ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print_at("Baz\n", -1, -1, ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print_at("Qux\n", -1, -1, ATTRIBUTE_WHITE_ON_BLUE);
+  screen_print("Foo\n", ATTRIBUTE_WHITE_ON_BLUE);
+  screen_print("Bar\n", ATTRIBUTE_WHITE_ON_BLUE);
+  screen_print("Baz\n", ATTRIBUTE_WHITE_ON_BLUE);
+  screen_print("Qux\n", ATTRIBUTE_WHITE_ON_BLUE);
 }
