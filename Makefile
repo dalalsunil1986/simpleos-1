@@ -13,7 +13,8 @@ CROSS_COMPILER_TARGET = i386-$(KERNEL_BINARY_FORMAT)
 C_SOURCES = $(wildcard src/kernel/*.c)
 C_HEADERS = $(wildcard src/kernel/*.h)
 C_OBJECTS = $(patsubst src/kernel/%.c,out/%.o,$(C_SOURCES))
-C_TESTS = $(patsubst test/kernel/%.c,out/test/kernel/%,$(wildcard test/kernel/*.c))
+C_SOURCES_TEST = $(wildcard test/kernel/*.c)
+C_TESTS = $(patsubst test/kernel/%.c,out/test/kernel/%,$(C_SOURCES_TEST))
 
 # -ffreestanding
 #     A free-standing environment assumes nothing about typical
@@ -150,7 +151,7 @@ qemu: out/image.bin
 
 lint:
 	shellcheck test/*.sh
-	vera++ --show-rule --summary --error $(C_SOURCES) $(C_HEADERS)
+	vera++ --show-rule --summary --error $(C_SOURCES) $(C_HEADERS) $(C_SOURCES_TEST)
 
 test: out/boot_loader.bin out/kernel.bin lint $(C_TESTS)
 	./test/boot_loader_size.sh $<
