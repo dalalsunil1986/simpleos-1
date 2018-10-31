@@ -29,9 +29,5 @@
 void main()
 {
   screen_clear();
-  screen_print("Foo\n", ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print("Bar\n", ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print("Baz\n", ATTRIBUTE_WHITE_ON_BLUE);
-  screen_print("Qux\n", ATTRIBUTE_WHITE_ON_BLUE);
-  screen_scroll();
+  screen_print("> Welcome to SimpleOS!\n", ATTRIBUTE_WHITE_ON_BLUE);
 }
