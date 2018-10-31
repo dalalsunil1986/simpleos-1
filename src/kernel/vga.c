@@ -140,7 +140,8 @@ void vga_fill(byte_t * const address, const char character, const byte_t attribu
   {
     for (column = 0; column < VGA_COLUMNS; column++)
     {
-      vga_write_character(address, character, column, row, attributes);
+      const vga_offset_t offset = vga_get_offset(column, row);
+      vga_offset_write_character(address, offset, character, attributes);
     }
   }
 }
