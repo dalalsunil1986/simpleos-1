@@ -91,6 +91,6 @@ void screen_print(const char * const message, const byte_t attributes)
 void screen_clear()
 {
   byte_t * const address = (byte_t * const) VGA_VIDEO_ADDRESS;
-  vga_fill(address, 'X', ATTRIBUTE_WHITE_ON_BLACK);
+  vga_fill(address, ' ', ATTRIBUTE_WHITE_ON_BLACK);
   vga_cursor_set_offset(vga_get_offset(0, 0));
 }
