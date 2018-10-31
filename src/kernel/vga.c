@@ -68,12 +68,12 @@ vga_position_t vga_get_column_from_offset(const vga_offset_t offset)
 
 vga_position_t vga_column(const vga_position_t column)
 {
-  return column > VGA_COLUMNS ? VGA_COLUMNS : column;
+  return column >= VGA_COLUMNS ? VGA_COLUMNS - 1 : column;
 }
 
 vga_position_t vga_row(const vga_position_t row)
 {
-  return row > VGA_ROWS ? VGA_ROWS : row;
+  return row >= VGA_ROWS ? VGA_ROWS - 1 : row;
 }
 
 void vga_offset_write_character(
