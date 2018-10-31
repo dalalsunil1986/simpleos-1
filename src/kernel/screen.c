@@ -29,13 +29,13 @@
 inline static vga_position_t __screen_get_real_column(
   const vga_offset_t current_offset, const vga_position_t column)
 {
-  return column != NULL ? column : vga_get_column_from_offset(current_offset);
+  return column < 0 ? vga_get_column_from_offset(current_offset) : column;
 }
 
 inline static vga_position_t __screen_get_real_row(
   const vga_offset_t current_offset, const vga_position_t row)
 {
-  return row != NULL ? row : vga_get_row_from_offset(current_offset);
+  return row < 0 ? vga_get_row_from_offset(current_offset) : row;
 }
 
 static vga_offset_t __screen_print_character(
@@ -85,7 +85,7 @@ void screen_print_at(
 
 void screen_print(const char * const message, const byte_t attributes)
 {
-  screen_print_at(message, NULL, NULL, attributes);
+  screen_print_at(message, -1, -1, attributes);
 }
 
 void screen_clear()

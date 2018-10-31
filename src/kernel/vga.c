@@ -95,7 +95,7 @@ vga_offset_t vga_write_character(
   const vga_offset_t offset = vga_get_offset(column, row);
   if (character == '\n')
   {
-    return vga_get_offset(0, vga_get_row_from_offset(offset) + 1);
+    return vga_get_offset(0, row + 1);
   }
 
   vga_offset_write_character(address, offset, character, attributes);
