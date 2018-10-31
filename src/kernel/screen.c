@@ -43,12 +43,11 @@ static vga_offset_t __screen_print_character(
   const screen_position_t column, const screen_position_t row,
   const byte_t attributes)
 {
-  const vga_offset_t current_offset = vga_cursor_get_offset();
   const vga_offset_t offset = vga_write_character(
     (byte_t * const) VGA_VIDEO_ADDRESS,
     character,
-    __screen_get_real_column(current_offset, column),
-    __screen_get_real_row(current_offset, row),
+    column,
+    row,
     attributes);
   vga_cursor_set_offset(offset);
   return offset;
