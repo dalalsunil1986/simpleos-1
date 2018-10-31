@@ -48,9 +48,9 @@ vga_offset_t vga_cursor_get_offset()
 void vga_cursor_set_offset(const vga_offset_t offset)
 {
   port_byte_out(REGISTRY_SCREEN_CTRL, 14);
-  port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) >> 8));
+  port_byte_out(REGISTRY_SCREEN_DATA, (unsigned char)((offset / 2) >> 8));
   port_byte_out(REGISTRY_SCREEN_CTRL, 15);
-  port_byte_out(REGISTRY_SCREEN_DATA, (byte_t)((offset / 2) & 0xff));
+  port_byte_out(REGISTRY_SCREEN_DATA, (unsigned char)((offset / 2) & 0xff));
 }
 
 vga_offset_t vga_get_offset(const vga_position_t column, const vga_position_t row)

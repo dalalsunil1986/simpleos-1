@@ -26,9 +26,9 @@
 
 #include "port.h"
 
-byte_t port_byte_in(const port_t port)
+unsigned char port_byte_in(const port_t port)
 {
-  byte_t result;
+  unsigned char result;
 
   // This is GCC's inline assembly extension, which uses GAS assembly
   // See: https://en.wikibooks.org/wiki/X86_Assembly/GAS_Syntax
@@ -42,7 +42,7 @@ byte_t port_byte_in(const port_t port)
   return result;
 }
 
-void port_byte_out(const port_t port, const byte_t value)
+void port_byte_out(const port_t port, const unsigned char value)
 {
   __asm__("out %%al, %%dx" : : "a" (value), "d" (port));
 }
